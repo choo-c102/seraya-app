@@ -1,90 +1,52 @@
-# Seraya App - Elderly Health Tracker
+# Seraya
 
-A visual-first, no-text health tracking system for elderly users with a companion caregiver app. Built with **Expo (React Native)** and **Convex** backend.
 
-## Architecture
+> Named for Borneo's tallest tropical tree—its great height held up by wide buttress roots, just as our elders' wisdom rests on the care that surrounds them.
 
-```
-seraya-app/
-├── backend/          # Convex backend (shared by both apps)
-├── elderly-app/      # Expo app for elderly users
-├── caregiver-app/    # Expo app for caregivers
-└── design-reference/ # Visual design mockups
-```
+
+Seraya is a health monitoring application designed to facilitate communication and care between elderly individuals and their caregivers. It consists of two distinct interfaces: a simple, accessible app for elderly users to complete daily check-ins and a comprehensive dashboard for caregivers to monitor well-being, track trends, and receive alerts.
+
+This repository contains the Convex backend and an interactive HTML front-end preview that demonstrates the full user experience for both app modules.
+
+## Features
+
+### Elderly App
+- **Simple Daily Check-ins:** A clean, icon-driven interface for elderly users to answer daily health questions.
+- **Intuitive Responses:** Users respond with smiley-face scales (1-5) or simple Yes/No buttons, minimizing cognitive load.
+- **Progress Tracking:** A visual progress bar shows users how many questions are left in their daily questionnaire.
+- **Completion Confirmation:** A clear, positive confirmation screen appears upon completing the check-in.
+
+### Caregiver App
+- **Centralized Dashboard:** Monitor the status and recent check-ins of all assigned elderly users in one place.
+- **Detailed Patient View:** Dive into an individual's profile to see daily summaries, historical trends, and triggered alerts.
+- **Data Visualization:** View health data through trend-line charts and a calendar heatmap to easily spot patterns or declines.
+- **Customizable Questionnaires:** Use the "Build" section to create, edit, and manage questionnaires. Caregivers can:
+    - Choose from templates or start from scratch.
+    - Define questions with custom icons and descriptions.
+    - Select response types (1-5 scale or Yes/No).
+    - Preview the questionnaire flow from the elderly user's perspective.
+- **Automated Alerts:** Configure alert thresholds for specific questions (e.g., "notify me if appetite is rated ≤ 2 for 3 consecutive days").
+- **Notification Center:** Receive and manage notifications for completed check-ins and triggered alerts.
 
 ## Tech Stack
 
-- **Frontend**: Expo (React Native) with Expo Router
-- **Backend**: Convex (real-time, reactive database)
-- **Auth**: Custom device-token auth (elderly) + email/password (caregivers)
-- **i18n**: i18next (English, Malay, Chinese, Tamil)
-- **Storage**: Convex file storage for custom icons and avatars
+- **Backend:** [Convex](https://www.convex.dev/)
+- **Frontend Preview:** HTML, CSS, Vanilla JavaScript
 
-## Getting Started
+## Interactive Preview
 
-### Prerequisites
+This repository includes a self-contained interactive front-end preview. To see it in action, simply open the `seraya-preview.html` file in your web browser. No backend setup is required to explore the UI and user flows.
 
-- Node.js >= 18
-- npm >= 8
-- Expo CLI (`npx expo`)
+## Project Structure
 
-### 1. Set up Convex Backend
-
-```bash
-cd backend
-npm install
-npx convex dev
 ```
-
-This will prompt you to create a Convex project. Follow the instructions and note your deployment URL.
-
-### 2. Configure Environment
-
-Create `.env` files in both app directories:
-
-```bash
-# elderly-app/.env
-EXPO_PUBLIC_CONVEX_URL=https://your-deployment.convex.cloud
-
-# caregiver-app/.env
-EXPO_PUBLIC_CONVEX_URL=https://your-deployment.convex.cloud
+.
+├── seraya-preview.html     # Interactive front-end preview for both apps
+├── backend/                # Convex backend application
+│   ├── convex/             # Schema, queries, mutations, and crons
+│   ├── package.json
+│   └── ...
+├── caregiver-app/          
+└── elderly-app/
 ```
-
-### 3. Run Elderly App
-
-```bash
-cd elderly-app
-npm install
-npx expo start
-```
-
-### 4. Run Caregiver App
-
-```bash
-cd caregiver-app
-npm install
-npx expo start
-```
-
-## Apps Overview
-
-### Elderly App
-- Zero-text interface using images, icons, and emojis
-- Duolingo-inspired one-question-per-screen flow
-- 5-smiley scale and yes/no boolean responses
-- Haptic feedback and confetti celebration on completion
-- Backfill calendar for missed days
-- Auto-login via device token
-
-### Caregiver App
-- **Dashboard**: Monitor assigned elderly patients' daily check-ins, trend charts, and heatmap calendar
-- **Build**: Create questionnaires from templates or from scratch, with built-in icon library
-- **Notifications**: Real-time alerts for threshold breaches and check-in completions
-- Email/password authentication with invite-link registration
-
-## Supported Languages
-
-- English
-- Bahasa Melayu (Malay)
-- 中文 (Chinese Simplified)
-- தமிழ் (Tamil)
+      
