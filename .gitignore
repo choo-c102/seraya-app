@@ -43,6 +43,8 @@ expo-env.d.ts
 *.aab
 
 # ----- Native signing artefacts -----
+.kotlin/
+*.orig.*
 *.jks
 *.p8
 *.p12
@@ -50,11 +52,17 @@ expo-env.d.ts
 *.mobileprovision
 *.pem
 
+# Metro
+.metro-health-check*
+
 # ----- TypeScript -----
 *.tsbuildinfo
 .tsbuildinfo/
 
 # ----- Logs & debug -----
+npm-debug.*
+yarn-debug.*
+yarn-error.*
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
@@ -86,6 +94,11 @@ desktop.ini
 # ----- Misc -----
 *.orig.*
 .kotlin/
+
+# generated native folders
+/ios
+/android
+
 
 # internal references
 design-reference/
