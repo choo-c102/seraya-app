@@ -1,0 +1,2437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Seraya — Front-end Preview</title>
+<style>
+  /* ---------- Design Tokens ---------- */
+  :root {
+    --teal: #0D9488;
+    --teal-dark: #0F766E;
+    --teal-light: #14B8A6;
+    --teal-soft: #E6F5F2;
+    --teal-tint: #F0F9F7;
+    --cream: #FFF8F0;
+    --cream-deep: #FBEFDA;
+    --bark: #5C4033;
+    --leaf: #2F7D4F;
+    --white: #FFFFFF;
+    --bg: #F4F1EC;
+    --surface: #FFFFFF;
+    --gray-50: #F9FAFB;
+    --gray-100: #F3F4F6;
+    --gray-200: #E5E7EB;
+    --gray-300: #D1D5DB;
+    --gray-400: #9CA3AF;
+    --gray-500: #6B7280;
+    --gray-700: #374151;
+    --gray-900: #111827;
+    --red: #EF4444;
+    --red-soft: #FEE2E2;
+    --orange: #F59E0B;
+    --orange-soft: #FEF3C7;
+    --amber-banner: #FFF6E5;
+    --amber-border: #FDE68A;
+    --yellow: #FACC15;
+    --green: #22C55E;
+    --green-dark: #16A34A;
+    --green-soft: #DCFCE7;
+    --smiley-1: #F47272;
+    --smiley-2: #F5A663;
+    --smiley-3: #F0C75E;
+    --smiley-4: #8DD9A0;
+    --smiley-5: #5BC07F;
+    --shadow-sm: 0 1px 2px rgba(15,23,42,.06);
+    --shadow-md: 0 4px 14px rgba(15,23,42,.08);
+    --shadow-lg: 0 12px 30px rgba(15,23,42,.12);
+    --shadow-phone: 0 30px 60px -10px rgba(15,23,42,.25), 0 18px 36px -10px rgba(15,23,42,.18);
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    color: var(--gray-900);
+    background:
+      radial-gradient(circle at 15% 10%, #FBF3E4 0%, transparent 45%),
+      radial-gradient(circle at 85% 90%, #E2EFE9 0%, transparent 50%),
+      var(--bg);
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* ---------- Page Header ---------- */
+  .page-header {
+    text-align: center;
+    padding: 48px 24px 16px;
+  }
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .brand-mark {
+    width: 56px; height: 56px;
+    color: var(--teal);
+  }
+  .brand-text { text-align: left; }
+  .brand-name {
+    font-size: 32px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--gray-900);
+    line-height: 1;
+  }
+  .brand-tag {
+    font-size: 13px;
+    color: var(--gray-500);
+    margin-top: 4px;
+  }
+  .page-sub {
+    margin: 18px auto 0;
+    max-width: 540px;
+    color: var(--gray-500);
+    font-size: 14px;
+    line-height: 1.55;
+    font-style: italic;
+  }
+
+  /* ---------- App Toggle ---------- */
+  .toggle-row {
+    display: flex;
+    justify-content: center;
+    margin: 28px 0 8px;
+  }
+  .toggle {
+    display: inline-flex;
+    background: var(--white);
+    border: 1px solid var(--gray-200);
+    border-radius: 999px;
+    padding: 4px;
+    box-shadow: var(--shadow-sm);
+  }
+  .toggle button {
+    border: 0;
+    background: transparent;
+    padding: 10px 20px;
+    border-radius: 999px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--gray-500);
+    cursor: pointer;
+    transition: all .2s ease;
+  }
+  .toggle button.active {
+    background: var(--teal);
+    color: var(--white);
+    box-shadow: 0 2px 8px rgba(13,148,136,.35);
+  }
+
+  /* ---------- Phone Frame ---------- */
+  .stage {
+    display: flex;
+    justify-content: center;
+    padding: 32px 16px 80px;
+  }
+  .phone {
+    width: 390px;
+    height: 800px;
+    background: #1A1F2C;
+    border-radius: 48px;
+    padding: 12px;
+    box-shadow: var(--shadow-phone);
+    position: relative;
+  }
+  .phone::before {
+    content: "";
+    position: absolute;
+    top: 18px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 110px;
+    height: 26px;
+    background: #0A0E16;
+    border-radius: 16px;
+    z-index: 5;
+  }
+  .phone-screen {
+    width: 100%;
+    height: 100%;
+    border-radius: 36px;
+    overflow: hidden;
+    position: relative;
+    background: var(--white);
+  }
+  .phone[data-app="elderly"] .phone-screen { background: var(--cream); }
+
+  .app { display: none; }
+  .app.active { display: block; }
+
+  /* Each screen lives inside a phone */
+  .screen {
+    position: absolute;
+    inset: 0;
+    display: none;
+    overflow: hidden;
+  }
+  .screen.active { display: block; }
+
+  /* Status bar */
+  .status-bar {
+    height: 50px;
+    flex-shrink: 0;
+  }
+
+  /* ---------- Elderly App ---------- */
+  .e-screen {
+    background: var(--cream);
+    min-height: 100%;
+    height: 100%;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    display: flex;
+    flex-direction: column;
+    padding: 70px 24px 40px;
+    position: relative;
+  }
+  .e-screen::-webkit-scrollbar { width: 0; }
+  .e-progress {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+  .e-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: #DCD2BF;
+    transition: all .25s ease;
+  }
+  .e-dot.active { background: var(--teal); transform: scale(1.3); }
+  .e-dot.done { background: var(--teal-light); opacity: .55; }
+
+  .e-icon-wrap {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 30px;
+  }
+  .e-icon-circle {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    background: var(--teal-tint);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 12px 30px rgba(15,118,110,.10);
+  }
+  .e-icon-circle svg { width: 100px; height: 100px; color: var(--teal); }
+
+  .e-smileys {
+    display: flex;
+    justify-content: center;
+    gap: 14px;
+    padding: 0 8px;
+    margin-bottom: 16px;
+  }
+  .e-smiley {
+    width: 60px; height: 60px;
+    border-radius: 50%;
+    border: 0;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 6px 14px rgba(15,23,42,.08);
+    transition: transform .12s ease, box-shadow .12s ease;
+  }
+  .e-smiley:active { transform: scale(.92); }
+  .e-smiley svg { width: 36px; height: 36px; color: rgba(255,255,255,.95); }
+  .e-smiley.s1 { background: var(--smiley-1); }
+  .e-smiley.s2 { background: var(--smiley-2); }
+  .e-smiley.s3 { background: var(--smiley-3); }
+  .e-smiley.s4 { background: var(--smiley-4); }
+  .e-smiley.s5 { background: var(--smiley-5); }
+
+  .e-bool {
+    display: flex;
+    justify-content: center;
+    gap: 36px;
+    margin-bottom: 16px;
+  }
+  .e-bool-btn {
+    width: 86px; height: 86px;
+    border-radius: 50%;
+    border: 0;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 18px rgba(15,23,42,.12);
+    transition: transform .12s ease;
+  }
+  .e-bool-btn:active { transform: scale(.92); }
+  .e-bool-btn.no { background: #E55353; }
+  .e-bool-btn.yes { background: #29B36A; }
+  .e-bool-btn svg { width: 40px; height: 40px; color: #fff; }
+
+  /* Completion */
+  .e-complete {
+    background: var(--cream);
+    min-height: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 24px;
+    position: relative;
+    overflow: hidden;
+  }
+  .e-check-circle {
+    width: 200px; height: 200px;
+    border-radius: 50%;
+    background: var(--green-dark);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 0 30px rgba(34,197,94,.12), 0 16px 40px rgba(22,163,74,.35);
+    animation: pulse 1.6s ease-out infinite;
+    position: relative;
+    z-index: 2;
+  }
+  .e-check-circle svg { width: 110px; height: 110px; color: #fff; stroke-width: 4; }
+  .e-complete-msg {
+    margin-top: 28px;
+    font-size: 18px;
+    color: var(--leaf);
+    font-weight: 600;
+    z-index: 2;
+  }
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50%      { transform: scale(1.04); }
+  }
+
+  /* Confetti */
+  .confetti {
+    position: absolute;
+    width: 8px; height: 14px;
+    border-radius: 2px;
+    opacity: 0;
+    animation: confettiFall 2.8s ease-out forwards;
+  }
+  @keyframes confettiFall {
+    0%   { opacity: 0; transform: translateY(-40px) rotate(0); }
+    10%  { opacity: 1; }
+    100% { opacity: 0; transform: translateY(820px) rotate(540deg); }
+  }
+
+  /* Restart pill */
+  .e-restart {
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(15,118,110,.9);
+    color: #fff;
+    border: 0;
+    padding: 10px 22px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    z-index: 3;
+  }
+
+  /* ---------- Caregiver App ---------- */
+  .c-screen {
+    min-height: 100%;
+    height: 100%;
+    background: var(--surface);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+  .c-header {
+    padding: 64px 22px 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .c-header h1 {
+    font-size: 22px;
+    font-weight: 700;
+    margin: 0;
+    color: var(--gray-900);
+    flex: 1;
+  }
+  .c-back {
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--gray-700);
+  }
+  .c-back svg { width: 22px; height: 22px; }
+
+  .c-bell {
+    position: relative;
+    width: 38px; height: 38px;
+    border-radius: 10px;
+    background: transparent;
+    border: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: var(--gray-700);
+  }
+  .c-bell svg { width: 22px; height: 22px; }
+  .c-bell .badge {
+    position: absolute;
+    top: 4px; right: 4px;
+    background: var(--red);
+    color: #fff;
+    font-size: 10px;
+    font-weight: 700;
+    border-radius: 10px;
+    min-width: 16px;
+    height: 16px;
+    padding: 0 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .c-body {
+    padding: 12px 18px 100px;
+    flex: 1;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .c-body::-webkit-scrollbar { width: 0; }
+
+  /* Tabs (bottom nav) */
+  .c-tabs {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 78px;
+    background: var(--white);
+    border-top: 1px solid var(--gray-100);
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    padding-bottom: 14px;
+  }
+  .c-tab {
+    background: transparent;
+    border: 0;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    color: var(--gray-400);
+    font-size: 12px;
+    font-weight: 500;
+    padding: 6px 16px;
+  }
+  .c-tab svg { width: 22px; height: 22px; }
+  .c-tab.active { color: var(--teal); }
+
+  /* Patient cards */
+  .patient-card {
+    background: var(--white);
+    border: 1px solid var(--gray-200);
+    border-radius: 14px;
+    padding: 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    transition: transform .12s ease, box-shadow .12s ease;
+  }
+  .patient-card:hover { transform: translateY(-1px); box-shadow: var(--shadow-md); }
+
+  .avatar {
+    width: 48px; height: 48px;
+    border-radius: 50%;
+    background: var(--gray-100);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--gray-500);
+    flex-shrink: 0;
+    position: relative;
+  }
+  .avatar .badge {
+    position: absolute;
+    top: -2px; right: -2px;
+    background: var(--red);
+    color: #fff;
+    font-size: 10px;
+    font-weight: 700;
+    border-radius: 10px;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid var(--white);
+  }
+  .patient-info { flex: 1; }
+  .patient-name {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--gray-900);
+    margin: 0 0 2px;
+  }
+  .patient-sub {
+    font-size: 12.5px;
+    color: var(--gray-500);
+    margin: 0;
+  }
+  .status-icon { width: 28px; height: 28px; flex-shrink: 0; }
+  .status-icon.done    { color: var(--green-dark); }
+  .status-icon.pending { color: var(--orange); }
+  .status-icon.missed  { color: var(--red); }
+
+  /* Alert banner */
+  .alert-banner {
+    background: var(--amber-banner);
+    border: 1px solid var(--amber-border);
+    border-radius: 12px;
+    padding: 12px 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+  .alert-banner .ear { width: 22px; height: 22px; color: var(--orange); flex-shrink: 0; }
+  .alert-banner p { margin: 0; font-size: 13px; color: #92400E; line-height: 1.4; }
+
+  /* Today summary */
+  .today-card {
+    background: var(--white);
+    border: 1px solid var(--gray-200);
+    border-radius: 14px;
+    padding: 14px;
+    margin-bottom: 14px;
+  }
+  .today-card h3 {
+    margin: 0 0 12px;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--gray-900);
+  }
+  .today-row {
+    display: flex;
+    justify-content: space-around;
+    align-items: flex-start;
+  }
+  .today-q {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+  }
+  .today-q svg { width: 22px; height: 22px; color: var(--teal); }
+  .today-q .dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+  }
+  .dot.green  { background: var(--green); }
+  .dot.orange { background: var(--orange); }
+  .dot.red    { background: var(--red); }
+
+  /* Date filter pills */
+  .pills { display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; }
+  .pill {
+    padding: 7px 14px;
+    border-radius: 999px;
+    border: 1px solid var(--gray-200);
+    background: var(--white);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--gray-500);
+    cursor: pointer;
+    transition: all .15s ease;
+  }
+  .pill.active {
+    background: var(--teal);
+    color: var(--white);
+    border-color: var(--teal);
+  }
+
+  .question-pills { display: flex; gap: 10px; margin-bottom: 12px; }
+  .qp {
+    width: 36px; height: 36px;
+    border-radius: 8px;
+    border: 1px solid var(--gray-200);
+    background: var(--white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: var(--gray-500);
+    transition: all .15s ease;
+  }
+  .qp svg { width: 18px; height: 18px; }
+  .qp.active { background: var(--teal-soft); border-color: var(--teal-light); color: var(--teal-dark); }
+
+  /* Chart card */
+  .chart-card {
+    background: var(--white);
+    border: 1px solid var(--gray-200);
+    border-radius: 14px;
+    padding: 14px;
+    margin-bottom: 12px;
+  }
+  .heatmap-link {
+    text-align: center;
+    color: var(--teal);
+    font-size: 14px;
+    font-weight: 600;
+    padding: 8px;
+    cursor: pointer;
+  }
+
+  /* Heatmap */
+  .heatmap-month {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 30px;
+    padding: 6px 0 14px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--gray-700);
+  }
+  .heatmap-month .nav-btn {
+    background: transparent;
+    border: 0;
+    cursor: pointer;
+    color: var(--gray-500);
+    width: 28px; height: 28px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .heatmap-month .nav-btn svg { width: 18px; height: 18px; }
+
+  .heatmap-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 6px;
+    padding: 0 4px;
+  }
+  .heatmap-head {
+    text-align: center;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--gray-500);
+    padding: 4px 0;
+  }
+  .day {
+    aspect-ratio: 1;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--white);
+    border: 0;
+    cursor: pointer;
+    background: var(--gray-200);
+    transition: transform .12s ease;
+  }
+  .day:hover { transform: scale(1.05); }
+  .day.empty { background: transparent; cursor: default; }
+  .day.no-data { background: var(--gray-300); color: var(--gray-500); }
+  .day.green  { background: var(--green); }
+  .day.orange { background: var(--orange); }
+  .day.red    { background: var(--red); }
+  .heatmap-legend {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    margin-top: 14px;
+    font-size: 12px;
+    color: var(--gray-500);
+  }
+  .legend-item { display: inline-flex; align-items: center; gap: 6px; }
+  .legend-swatch { width: 14px; height: 14px; border-radius: 4px; }
+
+  /* Heatmap day modal */
+  .day-modal {
+    position: absolute;
+    bottom: 78px;
+    left: 0; right: 0;
+    background: var(--white);
+    border-top: 1px solid var(--gray-200);
+    border-radius: 18px 18px 0 0;
+    padding: 18px 18px 22px;
+    box-shadow: 0 -8px 24px rgba(15,23,42,.12);
+    transform: translateY(110%);
+    transition: transform .35s cubic-bezier(.2,.8,.2,1);
+    z-index: 4;
+  }
+  .day-modal.open { transform: translateY(0); }
+  .day-modal-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
+  }
+  .day-modal-head h4 { margin: 0; font-size: 15px; font-weight: 700; }
+  .day-modal .close {
+    background: transparent; border: 0; cursor: pointer;
+    color: var(--gray-500); width: 28px; height: 28px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .day-modal .close svg { width: 18px; height: 18px; }
+  .day-modal-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--gray-100);
+  }
+  .day-modal-row:last-child { border-bottom: 0; }
+  .day-modal-row .left {
+    display: flex; align-items: center; gap: 10px;
+    font-size: 14px; color: var(--gray-700); font-weight: 500;
+  }
+  .day-modal-row svg { width: 20px; height: 20px; color: var(--gray-500); }
+  .day-modal-row .score { font-weight: 700; font-size: 14px; }
+  .score.green { color: var(--green-dark); }
+  .score.orange { color: var(--orange); }
+  .score.red    { color: var(--red); }
+
+  .scrim {
+    position: absolute;
+    inset: 0;
+    background: rgba(15,23,42,.45);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .25s ease;
+    z-index: 3;
+  }
+  .scrim.open { opacity: 1; pointer-events: auto; }
+
+  /* Notifications */
+  .notif-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px 18px;
+    border-bottom: 1px solid var(--gray-100);
+    cursor: pointer;
+  }
+  .notif-row.unread { background: var(--teal-tint); border-left: 3px solid var(--teal); }
+  .notif-row .icon {
+    width: 22px; height: 22px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .notif-row.completed .icon { color: var(--green-dark); }
+  .notif-row.alert .icon     { color: var(--orange); }
+  .notif-row .text { flex: 1; }
+  .notif-row .title {
+    margin: 0 0 2px;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--gray-900);
+  }
+  .notif-row .time { font-size: 12px; color: var(--gray-500); }
+  .notif-mark {
+    color: var(--teal);
+    font-size: 13px;
+    font-weight: 600;
+    background: transparent;
+    border: 0;
+    cursor: pointer;
+  }
+
+  /* Build list */
+  .build-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 0 12px;
+  }
+  .btn-primary {
+    background: var(--teal);
+    color: #fff;
+    border: 0;
+    padding: 9px 16px;
+    border-radius: 10px;
+    font-size: 13.5px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background .15s ease;
+  }
+  .btn-primary:hover { background: var(--teal-dark); }
+  .btn-primary.full { width: 100%; padding: 13px; font-size: 15px; }
+  .btn-secondary {
+    background: transparent;
+    color: var(--teal);
+    border: 1.5px solid var(--teal);
+    padding: 11px;
+    border-radius: 10px;
+    font-size: 14.5px;
+    font-weight: 700;
+    cursor: pointer;
+    width: 100%;
+  }
+  .btn-ghost {
+    background: var(--white);
+    border: 1px solid var(--gray-200);
+    color: var(--gray-700);
+    padding: 12px;
+    border-radius: 10px;
+    font-size: 14.5px;
+    font-weight: 700;
+    cursor: pointer;
+    width: 100%;
+  }
+
+  .q-card {
+    background: var(--white);
+    border: 1px solid var(--gray-200);
+    border-radius: 14px;
+    padding: 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+  .q-card-info { flex: 1; }
+  .q-card-info .qn { font-size: 14.5px; font-weight: 700; color: var(--gray-900); margin: 0; }
+  .q-card-info .qm { font-size: 12.5px; color: var(--gray-500); margin: 2px 0 0; }
+  .q-pill {
+    background: var(--teal-soft);
+    color: var(--teal-dark);
+    font-size: 11.5px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 999px;
+  }
+  .q-pill.inactive { background: var(--gray-100); color: var(--gray-500); }
+  .q-edit {
+    width: 32px; height: 32px;
+    border: 0; background: transparent; cursor: pointer;
+    color: var(--gray-500);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .q-edit svg { width: 18px; height: 18px; }
+
+  /* Build template grid */
+  .template-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  .template-card {
+    background: var(--white);
+    border: 1px solid var(--gray-200);
+    border-radius: 14px;
+    padding: 14px;
+  }
+  .template-card h4 { margin: 0 0 10px; font-size: 14px; line-height: 1.25; font-weight: 700; }
+  .template-icons { display: flex; gap: 8px; margin-bottom: 8px; color: var(--gray-500); }
+  .template-icons svg { width: 18px; height: 18px; }
+  .template-card .meta { font-size: 12px; color: var(--gray-500); margin: 0 0 12px; }
+  .template-card button {
+    width: 100%;
+    background: var(--teal);
+    color: #fff;
+    border: 0;
+    padding: 8px;
+    border-radius: 8px;
+    font-size: 12.5px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  .template-card.scratch {
+    border: 2px dashed var(--gray-200);
+    text-align: center;
+    background: transparent;
+  }
+  .template-card.scratch .plus {
+    width: 36px; height: 36px;
+    margin: 4px auto 8px;
+    color: var(--gray-400);
+  }
+  .template-card.scratch h4 { margin-bottom: 12px; }
+  .template-card.scratch button {
+    background: transparent;
+    color: var(--teal);
+    border: 1.5px solid var(--teal);
+  }
+
+  /* Question builder form */
+  .form-group { margin-bottom: 18px; }
+  .form-label { font-size: 14px; font-weight: 700; margin-bottom: 8px; display: block; color: var(--gray-900); }
+  .form-input {
+    width: 100%;
+    padding: 11px 12px;
+    border: 1px solid var(--gray-200);
+    border-radius: 10px;
+    font-size: 14px;
+    color: var(--gray-700);
+    font-family: inherit;
+    background: var(--white);
+  }
+  .form-input::placeholder { color: var(--gray-400); }
+
+  .seg {
+    display: inline-flex;
+    border: 1px solid var(--gray-200);
+    border-radius: 10px;
+    overflow: hidden;
+    background: var(--white);
+  }
+  .seg button {
+    background: transparent;
+    border: 0;
+    padding: 9px 16px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--gray-500);
+    cursor: pointer;
+  }
+  .seg button.active { background: var(--teal); color: #fff; }
+
+  .chip-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
+  .chip {
+    padding: 7px 13px;
+    border-radius: 999px;
+    border: 1px solid var(--gray-200);
+    background: var(--white);
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--gray-500);
+    cursor: pointer;
+  }
+  .chip.active { background: var(--teal); color: #fff; border-color: var(--teal); }
+
+  .icon-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px;
+  }
+  .icon-cell {
+    background: var(--white);
+    border: 1px solid var(--gray-200);
+    border-radius: 12px;
+    padding: 14px 6px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    color: var(--gray-700);
+    transition: all .15s ease;
+  }
+  .icon-cell svg { width: 28px; height: 28px; }
+  .icon-cell span { font-size: 11.5px; font-weight: 600; }
+  .icon-cell.active {
+    background: var(--teal-tint);
+    border: 1.5px solid var(--teal);
+    color: var(--teal-dark);
+  }
+
+  .response-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .response-cell {
+    background: var(--white);
+    border: 1px solid var(--gray-200);
+    border-radius: 12px;
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    text-align: center;
+    color: var(--gray-700);
+  }
+  .response-cell .preview { font-size: 18px; }
+  .response-cell .label { font-size: 13px; font-weight: 700; }
+  .response-cell.active {
+    background: var(--teal-tint);
+    border: 1.5px solid var(--teal);
+    color: var(--teal-dark);
+  }
+
+  /* Alert threshold */
+  .threshold-card {
+    background: var(--white);
+    border: 1px solid var(--gray-200);
+    border-radius: 12px;
+    padding: 14px;
+    margin-bottom: 14px;
+  }
+  .threshold-toggle {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+  }
+  .threshold-toggle h4 { margin: 0; font-size: 14px; font-weight: 700; }
+  .threshold-toggle svg { width: 18px; height: 18px; color: var(--gray-500); transition: transform .2s ease; }
+  .threshold-card.open .threshold-toggle svg { transform: rotate(180deg); }
+  .threshold-body { display: none; margin-top: 14px; }
+  .threshold-card.open .threshold-body { display: block; }
+  .threshold-row { margin-bottom: 12px; }
+  .threshold-row .small-label { font-size: 12px; color: var(--gray-500); margin-bottom: 6px; display: block; }
+  .threshold-row select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid var(--gray-200);
+    border-radius: 10px;
+    font-size: 14px;
+    color: var(--gray-700);
+    background: var(--white);
+    font-family: inherit;
+  }
+
+  /* Build preview mini phone */
+  .mini-phone-wrap {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 18px;
+  }
+  .mini-phone {
+    width: 220px;
+    height: 360px;
+    border-radius: 28px;
+    border: 2px solid var(--gray-200);
+    background: var(--cream);
+    padding: 18px 14px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .mini-progress { display: flex; gap: 5px; margin-bottom: 24px; }
+  .mini-progress .d {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: #DCD2BF;
+  }
+  .mini-progress .d.active { background: var(--teal); }
+  .mini-icon {
+    width: 80px; height: 80px;
+    border-radius: 50%;
+    background: var(--teal-tint);
+    display: flex; align-items: center; justify-content: center;
+    flex: 1;
+    margin-bottom: 18px;
+  }
+  .mini-icon svg { width: 40px; height: 40px; color: var(--teal); }
+  .mini-smileys { display: flex; gap: 8px; margin-bottom: 6px; }
+  .mini-smiley {
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .mini-smiley svg { width: 16px; height: 16px; color: rgba(255,255,255,.95); }
+  .mini-smiley.s1 { background: var(--smiley-1); }
+  .mini-smiley.s2 { background: var(--smiley-2); }
+  .mini-smiley.s3 { background: var(--smiley-3); }
+  .mini-smiley.s4 { background: var(--smiley-4); }
+  .mini-smiley.s5 { background: var(--smiley-5); }
+
+  .preview-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
+    padding: 0 4px;
+    font-size: 13px;
+    color: var(--gray-500);
+  }
+  .preview-nav button {
+    background: transparent; border: 0; cursor: pointer;
+    color: var(--gray-700); font-size: 13px; font-weight: 600;
+    display: inline-flex; align-items: center; gap: 4px;
+  }
+
+  /* Login + Register */
+  .auth-screen {
+    background: var(--white);
+    min-height: 100%;
+    height: 100%;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: 80px 30px 60px;
+    display: flex;
+    flex-direction: column;
+  }
+  .auth-screen::-webkit-scrollbar { width: 0; }
+  .auth-logo {
+    margin: 30px auto 14px;
+    width: 90px; height: 90px;
+    border-radius: 22px;
+    background: var(--teal);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 12px 28px rgba(13,148,136,.25);
+  }
+  .auth-logo svg { width: 56px; height: 56px; color: #fff; }
+  .auth-title {
+    text-align: center;
+    font-size: 26px;
+    font-weight: 800;
+    margin: 0 0 4px;
+    color: var(--gray-900);
+    letter-spacing: -0.01em;
+  }
+  .auth-sub {
+    text-align: center;
+    color: var(--gray-500);
+    font-size: 13.5px;
+    margin: 0 0 30px;
+    font-style: italic;
+  }
+  .auth-form-label {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--gray-700);
+    margin: 14px 0 6px;
+    display: block;
+  }
+  .auth-input {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid var(--gray-200);
+    border-radius: 10px;
+    font-size: 14px;
+    background: var(--white);
+    color: var(--gray-700);
+    font-family: inherit;
+  }
+  .auth-input::placeholder { color: var(--gray-400); }
+  .auth-btn {
+    margin-top: 22px;
+    width: 100%;
+    background: var(--teal);
+    color: #fff;
+    border: 0;
+    padding: 14px;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background .15s ease;
+  }
+  .auth-btn:hover { background: var(--teal-dark); }
+  .auth-link {
+    margin: 22px auto 0;
+    color: var(--teal);
+    font-size: 13.5px;
+    font-weight: 600;
+    background: transparent;
+    border: 0;
+    cursor: pointer;
+    text-align: center;
+    width: 100%;
+    text-decoration: none;
+  }
+  .invite-banner {
+    position: absolute;
+    top: 50px;
+    left: 0; right: 0;
+    background: var(--teal);
+    color: #fff;
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    border-bottom-left-radius: 14px;
+    border-bottom-right-radius: 14px;
+  }
+  .invite-banner button {
+    background: transparent; border: 0; cursor: pointer; color: #fff;
+    width: 28px; height: 28px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .invite-banner svg { width: 22px; height: 22px; }
+
+  /* Footer note */
+  .root-note {
+    max-width: 540px;
+    margin: 0 auto;
+    padding: 24px 24px 56px;
+    color: var(--gray-500);
+    font-size: 12.5px;
+    line-height: 1.65;
+    font-style: italic;
+    text-align: center;
+  }
+
+  /* Subtle chart strip */
+  .chart-svg { width: 100%; height: 180px; display: block; }
+
+  /* Helper text */
+  .small-help { font-size: 12px; color: var(--gray-500); margin: 0 0 8px; }
+
+</style>
+</head>
+<body>
+
+<header class="page-header">
+  <div class="brand">
+    <!-- Seraya tree mark: tall trunk, broad canopy, buttress roots flaring out -->
+    <svg class="brand-mark" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-label="Seraya logo">
+      <!-- Canopy: emergent layered crown -->
+      <path d="M32 4 C 22 4 16 12 18 20 C 12 22 12 32 22 32 L 42 32 C 52 32 52 22 46 20 C 48 12 42 4 32 4 Z" fill="currentColor" fill-opacity="0.18"/>
+      <path d="M22 14 C 22 9 27 5 32 5 C 37 5 42 9 42 14"/>
+      <!-- Trunk -->
+      <path d="M32 32 L 32 48"/>
+      <!-- Buttress roots: dramatic flare, anchoring great height -->
+      <path d="M32 48 L 18 56"/>
+      <path d="M32 48 L 46 56"/>
+      <path d="M30 48 L 24 58"/>
+      <path d="M34 48 L 40 58"/>
+      <path d="M28 48 L 14 54"/>
+      <path d="M36 48 L 50 54"/>
+    </svg>
+    <div class="brand-text">
+      <div class="brand-name">Seraya</div>
+      <div class="brand-tag">Front-end preview · Elderly + Caregiver</div>
+    </div>
+  </div>
+  <p class="page-sub">
+    Named for Borneo's tallest tropical tree — its great height held up by wide buttress roots,
+    just as our elders' wisdom rests on the care that surrounds them.
+  </p>
+</header>
+
+<div class="toggle-row">
+  <div class="toggle" role="tablist">
+    <button class="active" data-app="elderly">Elderly app</button>
+    <button data-app="caregiver">Caregiver app</button>
+  </div>
+</div>
+
+<div class="stage">
+  <!-- ============================ ELDERLY PHONE ============================ -->
+  <div class="phone" id="phone-elderly" data-app="elderly">
+    <div class="phone-screen">
+
+      <div class="app active" id="app-elderly">
+
+        <!-- Question screens -->
+        <section class="screen active" data-screen="e-q1">
+          <div class="e-screen">
+            <div class="e-progress">
+              <span class="e-dot active"></span>
+              <span class="e-dot"></span>
+              <span class="e-dot"></span>
+              <span class="e-dot"></span>
+              <span class="e-dot"></span>
+              <span class="e-dot"></span>
+            </div>
+            <div class="e-icon-wrap">
+              <div class="e-icon-circle">
+                <!-- Ear -->
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M6 8a6 6 0 0 1 12 0c0 4-3 5-3 8a3 3 0 0 1-6 0"/>
+                  <path d="M9 12a3 3 0 0 1 6 0"/>
+                </svg>
+              </div>
+            </div>
+            <div class="e-smileys">
+              <button class="e-smiley s1" data-next="e-q2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 16c1-2 2.5-3 4-3s3 1 4 3"/><circle cx="9" cy="10" r="0.7" fill="currentColor"/><circle cx="15" cy="10" r="0.7" fill="currentColor"/></svg></button>
+              <button class="e-smiley s2" data-next="e-q2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 15h8"/><circle cx="9" cy="10" r="0.7" fill="currentColor"/><circle cx="15" cy="10" r="0.7" fill="currentColor"/></svg></button>
+              <button class="e-smiley s3" data-next="e-q2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 14.5h8"/><circle cx="9" cy="10" r="0.7" fill="currentColor"/><circle cx="15" cy="10" r="0.7" fill="currentColor"/></svg></button>
+              <button class="e-smiley s4" data-next="e-q2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 13c1 2 2.5 3 4 3s3-1 4-3"/><circle cx="9" cy="10" r="0.7" fill="currentColor"/><circle cx="15" cy="10" r="0.7" fill="currentColor"/></svg></button>
+              <button class="e-smiley s5" data-next="e-q2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M7 13c1.5 3 3 4 5 4s3.5-1 5-4"/><circle cx="9" cy="10" r="0.7" fill="currentColor"/><circle cx="15" cy="10" r="0.7" fill="currentColor"/></svg></button>
+            </div>
+          </div>
+        </section>
+
+        <section class="screen" data-screen="e-q2">
+          <div class="e-screen">
+            <div class="e-progress">
+              <span class="e-dot done"></span>
+              <span class="e-dot active"></span>
+              <span class="e-dot"></span>
+              <span class="e-dot"></span>
+              <span class="e-dot"></span>
+              <span class="e-dot"></span>
+            </div>
+            <div class="e-icon-wrap">
+              <div class="e-icon-circle">
+                <!-- Eye -->
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/>
+                  <circle cx="12" cy="12" r="3"/>
+                </svg>
+              </div>
+            </div>
+            <div class="e-smileys">
+              <button class="e-smiley s1" data-next="e-q3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 16c1-2 2.5-3 4-3s3 1 4 3"/><circle cx="9" cy="10" r="0.7" fill="currentColor"/><circle cx="15" cy="10" r="0.7" fill="currentColor"/></svg></button>
+              <button class="e-smiley s2" data-next="e-q3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 15h8"/><circle cx="9" cy="10" r="0.7" fill="currentColor"/><circle cx="15" cy="10" r="0.7" fill="currentColor"/></svg></button>
+              <button class="e-smiley s3" data-next="e-q3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 14.5h8"/><circle cx="9" cy="10" r="0.7" fill="currentColor"/><circle cx="15" cy="10" r="0.7" fill="currentColor"/></svg></button>
+              <button class="e-smiley s4" data-next="e-q3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 13c1 2 2.5 3 4 3s3-1 4-3"/><circle cx="9" cy="10" r="0.7" fill="currentColor"/><circle cx="15" cy="10" r="0.7" fill="currentColor"/></svg></button>
+              <button class="e-smiley s5" data-next="e-q3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M7 13c1.5 3 3 4 5 4s3.5-1 5-4"/><circle cx="9" cy="10" r="0.7" fill="currentColor"/><circle cx="15" cy="10" r="0.7" fill="currentColor"/></svg></button>
+            </div>
+          </div>
+        </section>
+
+        <section class="screen" data-screen="e-q3">
+          <div class="e-screen">
+            <div class="e-progress">
+              <span class="e-dot done"></span>
+              <span class="e-dot done"></span>
+              <span class="e-dot active"></span>
+              <span class="e-dot"></span>
+              <span class="e-dot"></span>
+              <span class="e-dot"></span>
+            </div>
+            <div class="e-icon-wrap">
+              <div class="e-icon-circle">
+                <!-- Walking / footsteps -->
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <ellipse cx="8" cy="7" rx="2.2" ry="3"/>
+                  <ellipse cx="16" cy="14" rx="2.2" ry="3"/>
+                  <path d="M6 12c0 .8.4 1.5 1 2"/>
+                  <path d="M14 19c0 .8.4 1.5 1 2"/>
+                </svg>
+              </div>
+            </div>
+            <div class="e-smileys">
+              <button class="e-smiley s1" data-next="e-q4"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 16c1-2 2.5-3 4-3s3 1 4 3"/><circle cx="9" cy="10" r="0.7" fill="currentColor"/><circle cx="15" cy="10" r="0.7" fill="currentColor"/></svg></button>
+              <button class="e-smiley s2" data-next="e-q4"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 15h8"/><circle cx="9" cy="10" r="0.7" fill="currentColor"/><circle cx="15" cy="10" r="0.7" fill="currentColor"/></svg></button>
+              <button class="e-smiley s3" data-next="e-q4"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 14.5h8"/><circle cx="9" cy="10" r="0.7" fill="currentColor"/><circle cx="15" cy="10" r="0.7" fill="currentColor"/></svg></button>
+              <button class="e-smiley s4" data-next="e-q4"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 13c1 2 2.5 3 4 3s3-1 4-3"/><circle cx="9" cy="10" r="0.7" fill="currentColor"/><circle cx="15" cy="10" r="0.7" fill="currentColor"/></svg></button>
+              <button class="e-smiley s5" data-next="e-q4"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M7 13c1.5 3 3 4 5 4s3.5-1 5-4"/><circle cx="9" cy="10" r="0.7" fill="currentColor"/><circle cx="15" cy="10" r="0.7" fill="currentColor"/></svg></button>
+            </div>
+          </div>
+        </section>
+
+        <section class="screen" data-screen="e-q4">
+          <div class="e-screen">
+            <div class="e-progress">
+              <span class="e-dot done"></span>
+              <span class="e-dot done"></span>
+              <span class="e-dot done"></span>
+              <span class="e-dot active"></span>
+              <span class="e-dot"></span>
+              <span class="e-dot"></span>
+            </div>
+            <div class="e-icon-wrap">
+              <div class="e-icon-circle">
+                <!-- Brain / cognition -->
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M9 4a3 3 0 0 0-3 3v1a3 3 0 0 0-1 5 3 3 0 0 0 1 5v1a3 3 0 0 0 6 0V4Z"/>
+                  <path d="M15 4a3 3 0 0 1 3 3v1a3 3 0 0 1 1 5 3 3 0 0 1-1 5v1a3 3 0 0 1-6 0V4Z"/>
+                  <path d="M12 7v10"/>
+                </svg>
+              </div>
+            </div>
+            <div class="e-smileys">
+              <button class="e-smiley s1" data-next="e-q5"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 16c1-2 2.5-3 4-3s3 1 4 3"/><circle cx="9" cy="10" r="0.7" fill="currentColor"/><circle cx="15" cy="10" r="0.7" fill="currentColor"/></svg></button>
+              <button class="e-smiley s2" data-next="e-q5"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 15h8"/><circle cx="9" cy="10" r="0.7" fill="currentColor"/><circle cx="15" cy="10" r="0.7" fill="currentColor"/></svg></button>
+              <button class="e-smiley s3" data-next="e-q5"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 14.5h8"/><circle cx="9" cy="10" r="0.7" fill="currentColor"/><circle cx="15" cy="10" r="0.7" fill="currentColor"/></svg></button>
+              <button class="e-smiley s4" data-next="e-q5"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 13c1 2 2.5 3 4 3s3-1 4-3"/><circle cx="9" cy="10" r="0.7" fill="currentColor"/><circle cx="15" cy="10" r="0.7" fill="currentColor"/></svg></button>
+              <button class="e-smiley s5" data-next="e-q5"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M7 13c1.5 3 3 4 5 4s3.5-1 5-4"/><circle cx="9" cy="10" r="0.7" fill="currentColor"/><circle cx="15" cy="10" r="0.7" fill="currentColor"/></svg></button>
+            </div>
+          </div>
+        </section>
+
+        <section class="screen" data-screen="e-q5">
+          <div class="e-screen">
+            <div class="e-progress">
+              <span class="e-dot done"></span>
+              <span class="e-dot done"></span>
+              <span class="e-dot done"></span>
+              <span class="e-dot done"></span>
+              <span class="e-dot active"></span>
+              <span class="e-dot"></span>
+            </div>
+            <div class="e-icon-wrap">
+              <div class="e-icon-circle">
+                <!-- Pill / medication -->
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="2" y="9" width="20" height="6" rx="3" transform="rotate(-30 12 12)"/>
+                  <path d="M9.5 5.6 14.4 18.4" />
+                </svg>
+              </div>
+            </div>
+            <div class="e-bool">
+              <button class="e-bool-btn no" data-next="e-q6">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6 18 18"/><path d="M18 6 6 18"/></svg>
+              </button>
+              <button class="e-bool-btn yes" data-next="e-q6">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l5 5 9-11"/></svg>
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <section class="screen" data-screen="e-q6">
+          <div class="e-screen">
+            <div class="e-progress">
+              <span class="e-dot done"></span>
+              <span class="e-dot done"></span>
+              <span class="e-dot done"></span>
+              <span class="e-dot done"></span>
+              <span class="e-dot done"></span>
+              <span class="e-dot active"></span>
+            </div>
+            <div class="e-icon-wrap">
+              <div class="e-icon-circle">
+                <!-- Heart -->
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 21s-7-4.5-9.5-9C.5 8 3 4 7 4c2 0 3.5 1 5 3 1.5-2 3-3 5-3 4 0 6.5 4 4.5 8C19 16.5 12 21 12 21Z"/>
+                </svg>
+              </div>
+            </div>
+            <div class="e-bool">
+              <button class="e-bool-btn no" data-next="e-complete">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6 18 18"/><path d="M18 6 6 18"/></svg>
+              </button>
+              <button class="e-bool-btn yes" data-next="e-complete">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l5 5 9-11"/></svg>
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- Completion screen -->
+        <section class="screen" data-screen="e-complete">
+          <div class="e-complete" id="e-complete-stage">
+            <div class="e-check-circle">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5 10 18 19 7"/></svg>
+            </div>
+            <div class="e-complete-msg">All done for today</div>
+            <button class="e-restart" id="e-restart">Try the flow again</button>
+          </div>
+        </section>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================ CAREGIVER PHONE ============================ -->
+  <div class="phone" id="phone-caregiver" data-app="caregiver" style="display:none;">
+    <div class="phone-screen">
+
+      <div class="app active" id="app-caregiver">
+
+        <!-- Login -->
+        <section class="screen active" data-screen="c-login">
+          <div class="auth-screen">
+            <div class="auth-logo">
+              <!-- Tree mark, white -->
+              <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M32 4 C 22 4 16 12 18 20 C 12 22 12 32 22 32 L 42 32 C 52 32 52 22 46 20 C 48 12 42 4 32 4 Z" fill="currentColor" fill-opacity="0.18"/>
+                <path d="M22 14 C 22 9 27 5 32 5 C 37 5 42 9 42 14"/>
+                <path d="M32 32 L 32 48"/>
+                <path d="M32 48 L 18 56"/>
+                <path d="M32 48 L 46 56"/>
+                <path d="M30 48 L 24 58"/>
+                <path d="M34 48 L 40 58"/>
+              </svg>
+            </div>
+            <h1 class="auth-title">Seraya</h1>
+            <p class="auth-sub">Tall as wisdom. Rooted in care.</p>
+
+            <label class="auth-form-label">Email</label>
+            <input class="auth-input" placeholder="you@example.com" />
+            <label class="auth-form-label">Password</label>
+            <input class="auth-input" type="password" placeholder="••••••••" />
+
+            <button class="auth-btn" data-go="c-dashboard">Log In</button>
+            <button class="auth-link" data-go="c-register">Have an invite? Register here.</button>
+          </div>
+        </section>
+
+        <!-- Register -->
+        <section class="screen" data-screen="c-register">
+          <div class="auth-screen" style="padding-top:120px;">
+            <div class="invite-banner">
+              <span style="flex:1;">You've been invited to Sunrise Care Center</span>
+              <button data-go="c-login"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg></button>
+            </div>
+            <h1 class="auth-title" style="margin-top:30px;">Create Account</h1>
+
+            <label class="auth-form-label">Full Name</label>
+            <input class="auth-input" placeholder="Full Name" />
+            <label class="auth-form-label">Email</label>
+            <input class="auth-input" placeholder="Email" />
+            <label class="auth-form-label">Password</label>
+            <input class="auth-input" type="password" placeholder="Password" />
+            <label class="auth-form-label">Confirm Password</label>
+            <input class="auth-input" type="password" placeholder="Confirm Password" />
+
+            <button class="auth-btn" data-go="c-dashboard">Create Account</button>
+          </div>
+        </section>
+
+        <!-- Dashboard / Patient list -->
+        <section class="screen" data-screen="c-dashboard">
+          <div class="c-screen">
+            <div class="c-header">
+              <h1>Dashboard</h1>
+              <button class="c-bell" data-go="c-notifications">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 8 3 8H3s3-1 3-8"/><path d="M10 20a2 2 0 0 0 4 0"/></svg>
+                <span class="badge">3</span>
+              </button>
+            </div>
+            <div class="c-body">
+
+              <div class="patient-card" data-go="c-patient">
+                <div class="avatar">AI</div>
+                <div class="patient-info">
+                  <p class="patient-name">Ahmad bin Ismail</p>
+                  <p class="patient-sub">Last check-in: Today, 9:14 AM</p>
+                </div>
+                <svg class="status-icon done" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 12.5l3 3 5.5-7"/></svg>
+              </div>
+
+              <div class="patient-card" data-go="c-patient">
+                <div class="avatar">SA<span class="badge">2</span></div>
+                <div class="patient-info">
+                  <p class="patient-name">Siti Aminah</p>
+                  <p class="patient-sub">Last check-in: Today, 8:30 AM</p>
+                </div>
+                <svg class="status-icon pending" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 7v5l3 2"/></svg>
+              </div>
+
+              <div class="patient-card" data-go="c-patient">
+                <div class="avatar">LA<span class="badge">1</span></div>
+                <div class="patient-info">
+                  <p class="patient-name">Lim Ah Kow</p>
+                  <p class="patient-sub">Last check-in: Yesterday, 4:00 PM</p>
+                </div>
+                <svg class="status-icon missed" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9 9l6 6"/><path d="M15 9l-6 6"/></svg>
+              </div>
+
+            </div>
+            <div class="c-tabs">
+              <button class="c-tab active" data-go="c-dashboard">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+                <span>Dashboard</span>
+              </button>
+              <button class="c-tab" data-go="c-build-list">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.5 2.5-2.5-2.5 2.5-2.5Z"/></svg>
+                <span>Build</span>
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- Patient detail (Siti Aminah) -->
+        <section class="screen" data-screen="c-patient">
+          <div class="c-screen">
+            <div class="c-header">
+              <button class="c-back" data-go="c-dashboard">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
+              </button>
+              <div class="avatar" style="width:36px;height:36px;font-size:11px;">SA</div>
+              <h1 style="font-size:18px;">Siti Aminah</h1>
+            </div>
+            <div class="c-body">
+
+              <div class="alert-banner">
+                <svg class="ear" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 4-3 5-3 8a3 3 0 0 1-6 0"/><path d="M9 12a3 3 0 0 1 6 0"/></svg>
+                <p>Hearing rated ≤2 for 3 consecutive days.</p>
+              </div>
+
+              <div class="today-card">
+                <h3>Today's Summary</h3>
+                <div class="today-row">
+                  <div class="today-q">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 4-3 5-3 8a3 3 0 0 1-6 0"/><path d="M9 12a3 3 0 0 1 6 0"/></svg>
+                    <span class="dot red"></span>
+                  </div>
+                  <div class="today-q">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+                    <span class="dot green"></span>
+                  </div>
+                  <div class="today-q">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="9" width="20" height="6" rx="3" transform="rotate(-30 12 12)"/><path d="M9.5 5.6 14.4 18.4"/></svg>
+                    <span class="dot green"></span>
+                  </div>
+                  <div class="today-q">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="8" cy="7" rx="2.2" ry="3"/><ellipse cx="16" cy="14" rx="2.2" ry="3"/></svg>
+                    <span class="dot orange"></span>
+                  </div>
+                  <div class="today-q">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4a3 3 0 0 0-3 3v1a3 3 0 0 0-1 5 3 3 0 0 0 1 5v1a3 3 0 0 0 6 0V4Z"/><path d="M15 4a3 3 0 0 1 3 3v1a3 3 0 0 1 1 5 3 3 0 0 1-1 5v1a3 3 0 0 1-6 0V4Z"/></svg>
+                    <span class="dot green"></span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="pills">
+                <button class="pill active">7D</button>
+                <button class="pill">30D</button>
+                <button class="pill">90D</button>
+                <button class="pill">1Y</button>
+                <button class="pill">Custom</button>
+              </div>
+
+              <div class="question-pills">
+                <button class="qp active">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 4-3 5-3 8a3 3 0 0 1-6 0"/><path d="M9 12a3 3 0 0 1 6 0"/></svg>
+                </button>
+                <button class="qp"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg></button>
+                <button class="qp"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="9" width="20" height="6" rx="3" transform="rotate(-30 12 12)"/><path d="M9.5 5.6 14.4 18.4"/></svg></button>
+                <button class="qp"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="8" cy="7" rx="2.2" ry="3"/><ellipse cx="16" cy="14" rx="2.2" ry="3"/></svg></button>
+                <button class="qp"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4a3 3 0 0 0-3 3v1a3 3 0 0 0-1 5 3 3 0 0 0 1 5v1a3 3 0 0 0 6 0V4Z"/></svg></button>
+              </div>
+
+              <div class="chart-card">
+                <svg class="chart-svg" viewBox="0 0 320 180" preserveAspectRatio="none">
+                  <!-- Score zones -->
+                  <rect x="34" y="10"  width="280" height="44" fill="#DCFCE7"/>
+                  <rect x="34" y="54"  width="280" height="34" fill="#FEF3C7"/>
+                  <rect x="34" y="88"  width="280" height="56" fill="#FEE2E2"/>
+                  <!-- Y axis labels -->
+                  <g font-family="-apple-system, sans-serif" font-size="10" fill="#6B7280">
+                    <text x="20" y="18">5</text>
+                    <text x="20" y="50">4</text>
+                    <text x="20" y="82">3</text>
+                    <text x="20" y="114">2</text>
+                    <text x="20" y="146">1</text>
+                  </g>
+                  <!-- Grid lines -->
+                  <g stroke="#E5E7EB" stroke-width="1" stroke-dasharray="3 3">
+                    <line x1="34" y1="14"  x2="314" y2="14"/>
+                    <line x1="34" y1="46"  x2="314" y2="46"/>
+                    <line x1="34" y1="78"  x2="314" y2="78"/>
+                    <line x1="34" y1="110" x2="314" y2="110"/>
+                    <line x1="34" y1="142" x2="314" y2="142"/>
+                  </g>
+                  <!-- Trend line: Mon=4 Tue=3 Wed=2 Thu=2 Fri=3 Sat=4 Sun=3 -->
+                  <polyline points="60,46 100,78 140,110 180,110 220,78 260,46 300,78"
+                            fill="none" stroke="#0F766E" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  <g fill="#0F766E">
+                    <circle cx="60"  cy="46"  r="4"/>
+                    <circle cx="100" cy="78"  r="4"/>
+                    <circle cx="140" cy="110" r="4"/>
+                    <circle cx="180" cy="110" r="4"/>
+                    <circle cx="220" cy="78"  r="4"/>
+                    <circle cx="260" cy="46"  r="4"/>
+                    <circle cx="300" cy="78"  r="4"/>
+                  </g>
+                  <g font-family="-apple-system, sans-serif" font-size="10" fill="#6B7280" text-anchor="middle">
+                    <text x="60"  y="165">Mon</text>
+                    <text x="100" y="165">Tue</text>
+                    <text x="140" y="165">Wed</text>
+                    <text x="180" y="165">Thu</text>
+                    <text x="220" y="165">Fri</text>
+                    <text x="260" y="165">Sat</text>
+                    <text x="300" y="165">Sun</text>
+                  </g>
+                </svg>
+              </div>
+
+              <div class="heatmap-link" data-go="c-heatmap">View Calendar Heatmap →</div>
+
+            </div>
+            <div class="c-tabs">
+              <button class="c-tab active" data-go="c-dashboard">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+                <span>Dashboard</span>
+              </button>
+              <button class="c-tab" data-go="c-build-list">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.5 2.5-2.5-2.5 2.5-2.5Z"/></svg>
+                <span>Build</span>
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- Heatmap calendar -->
+        <section class="screen" data-screen="c-heatmap">
+          <div class="c-screen">
+            <div class="c-header">
+              <button class="c-back" data-go="c-patient">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
+              </button>
+              <h1>Heatmap Calendar</h1>
+            </div>
+            <div class="c-body">
+              <div class="heatmap-month">
+                <button class="nav-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg></button>
+                <span>April 2026</span>
+                <button class="nav-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></button>
+              </div>
+              <div class="heatmap-grid">
+                <div class="heatmap-head">S</div>
+                <div class="heatmap-head">M</div>
+                <div class="heatmap-head">T</div>
+                <div class="heatmap-head">W</div>
+                <div class="heatmap-head">T</div>
+                <div class="heatmap-head">F</div>
+                <div class="heatmap-head">S</div>
+
+                <!-- April 2026: April 1 falls on Wednesday -->
+                <div class="day empty"></div>
+                <div class="day empty"></div>
+                <div class="day empty"></div>
+                <div class="day no-data">1</div>
+                <div class="day orange">2</div>
+                <div class="day green">3</div>
+                <div class="day green">4</div>
+
+                <div class="day green">5</div>
+                <div class="day red">6</div>
+                <div class="day green">7</div>
+                <div class="day green">8</div>
+                <div class="day no-data">9</div>
+                <div class="day green">10</div>
+                <div class="day green">11</div>
+
+                <div class="day green">12</div>
+                <div class="day red">13</div>
+                <div class="day green">14</div>
+                <div class="day red">15</div>
+                <div class="day green">16</div>
+                <div class="day green">17</div>
+                <div class="day red">18</div>
+
+                <div class="day green">19</div>
+                <div class="day green">20</div>
+                <div class="day green">21</div>
+                <div class="day green">22</div>
+                <div class="day orange">23</div>
+                <div class="day red">24</div>
+                <div class="day green">25</div>
+
+                <div class="day red">26</div>
+                <div class="day red">27</div>
+                <div class="day orange">28</div>
+                <div class="day orange">29</div>
+                <div class="day green" id="day30" data-modal="open">30</div>
+                <div class="day empty"></div>
+                <div class="day empty"></div>
+              </div>
+              <div class="heatmap-legend">
+                <span class="legend-item"><span class="legend-swatch" style="background:var(--green);"></span>4-5</span>
+                <span class="legend-item"><span class="legend-swatch" style="background:var(--orange);"></span>3</span>
+                <span class="legend-item"><span class="legend-swatch" style="background:var(--red);"></span>1-2</span>
+                <span class="legend-item"><span class="legend-swatch" style="background:var(--gray-300);"></span>No data</span>
+              </div>
+              <p class="small-help" style="text-align:center;margin-top:18px;">Tip: tap April 30 to see that day's answers.</p>
+            </div>
+
+            <!-- Day detail modal -->
+            <div class="scrim" id="heatmap-scrim"></div>
+            <div class="day-modal" id="heatmap-day-modal">
+              <div class="day-modal-head">
+                <h4>April 30, 2026</h4>
+                <button class="close" id="day-modal-close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6 18 18"/><path d="M18 6 6 18"/></svg></button>
+              </div>
+              <div class="day-modal-row">
+                <div class="left"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 4-3 5-3 8a3 3 0 0 1-6 0"/><path d="M9 12a3 3 0 0 1 6 0"/></svg> Hearing</div>
+                <span class="score orange">3/5</span>
+              </div>
+              <div class="day-modal-row">
+                <div class="left"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg> Vision</div>
+                <span class="score green">4/5</span>
+              </div>
+              <div class="day-modal-row">
+                <div class="left"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="9" width="20" height="6" rx="3" transform="rotate(-30 12 12)"/><path d="M9.5 5.6 14.4 18.4"/></svg> Medication</div>
+                <span class="score green">5/5</span>
+              </div>
+              <div class="day-modal-row">
+                <div class="left"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="8" cy="7" rx="2.2" ry="3"/><ellipse cx="16" cy="14" rx="2.2" ry="3"/></svg> Mobility</div>
+                <span class="score red">2/5</span>
+              </div>
+              <div class="day-modal-row">
+                <div class="left"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4a3 3 0 0 0-3 3v1a3 3 0 0 0-1 5 3 3 0 0 0 1 5v1a3 3 0 0 0 6 0V4Z"/><path d="M15 4a3 3 0 0 1 3 3v1a3 3 0 0 1 1 5 3 3 0 0 1-1 5v1a3 3 0 0 1-6 0V4Z"/></svg> Cognition</div>
+                <span class="score green">4/5</span>
+              </div>
+            </div>
+
+            <div class="c-tabs">
+              <button class="c-tab active" data-go="c-dashboard">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+                <span>Dashboard</span>
+              </button>
+              <button class="c-tab" data-go="c-build-list">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.5 2.5-2.5-2.5 2.5-2.5Z"/></svg>
+                <span>Build</span>
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- Notifications -->
+        <section class="screen" data-screen="c-notifications">
+          <div class="c-screen">
+            <div class="c-header">
+              <button class="c-back" data-go="c-dashboard">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
+              </button>
+              <h1>Notifications</h1>
+              <button class="notif-mark">Mark all read</button>
+            </div>
+            <div class="c-body" style="padding:0 0 100px;">
+
+              <div class="notif-row unread completed" data-go="c-patient">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 12.5l3 3 5.5-7"/></svg>
+                <div class="text">
+                  <p class="title">Ahmad completed check-in</p>
+                  <span class="time">9:14 AM</span>
+                </div>
+              </div>
+
+              <div class="notif-row unread alert" data-go="c-patient">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 2 21h20Z"/><path d="M12 10v5"/><path d="M12 18h.01"/></svg>
+                <div class="text">
+                  <p class="title">Alert: Siti — Hearing concern</p>
+                  <span class="time">8:45 AM</span>
+                </div>
+              </div>
+
+              <div class="notif-row completed">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 12.5l3 3 5.5-7"/></svg>
+                <div class="text">
+                  <p class="title">Lim completed check-in</p>
+                  <span class="time">Yesterday</span>
+                </div>
+              </div>
+
+              <div class="notif-row alert">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 2 21h20Z"/><path d="M12 10v5"/><path d="M12 18h.01"/></svg>
+                <div class="text">
+                  <p class="title">Alert: Ahmad — Mobility decline</p>
+                  <span class="time">Yesterday</span>
+                </div>
+              </div>
+
+              <div class="notif-row completed">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 12.5l3 3 5.5-7"/></svg>
+                <div class="text">
+                  <p class="title">Siti completed check-in</p>
+                  <span class="time">2 days ago</span>
+                </div>
+              </div>
+
+            </div>
+            <div class="c-tabs">
+              <button class="c-tab active" data-go="c-dashboard">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+                <span>Dashboard</span>
+              </button>
+              <button class="c-tab" data-go="c-build-list">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.5 2.5-2.5-2.5 2.5-2.5Z"/></svg>
+                <span>Build</span>
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- Build list -->
+        <section class="screen" data-screen="c-build-list">
+          <div class="c-screen">
+            <div class="c-header">
+              <h1>Build</h1>
+              <button class="btn-primary" data-go="c-build-templates">Create New</button>
+            </div>
+            <div class="c-body">
+
+              <div class="q-card">
+                <div class="avatar">AI</div>
+                <div class="q-card-info">
+                  <p class="qn">Ahmad bin Ismail</p>
+                  <p class="qm">Daily General Check-in · 6 questions</p>
+                </div>
+                <span class="q-pill">Active</span>
+                <button class="q-edit" data-go="c-build-edit">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 1 1 3 3L7 19l-4 1 1-4 12.5-12.5Z"/></svg>
+                </button>
+              </div>
+
+              <div class="q-card">
+                <div class="avatar">SA</div>
+                <div class="q-card-info">
+                  <p class="qn">Siti Aminah</p>
+                  <p class="qm">Post-Surgery Recovery · 8 questions</p>
+                </div>
+                <span class="q-pill">Active</span>
+                <button class="q-edit" data-go="c-build-edit">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 1 1 3 3L7 19l-4 1 1-4 12.5-12.5Z"/></svg>
+                </button>
+              </div>
+
+              <div class="q-card">
+                <div class="avatar">LA</div>
+                <div class="q-card-info">
+                  <p class="qn">Lim Ah Kow</p>
+                  <p class="qm">Pain Management · 4 questions</p>
+                </div>
+                <span class="q-pill inactive">Inactive</span>
+                <button class="q-edit" data-go="c-build-edit">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 1 1 3 3L7 19l-4 1 1-4 12.5-12.5Z"/></svg>
+                </button>
+              </div>
+
+            </div>
+            <div class="c-tabs">
+              <button class="c-tab" data-go="c-dashboard">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+                <span>Dashboard</span>
+              </button>
+              <button class="c-tab active" data-go="c-build-list">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.5 2.5-2.5-2.5 2.5-2.5Z"/></svg>
+                <span>Build</span>
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- Build: choose template -->
+        <section class="screen" data-screen="c-build-templates">
+          <div class="c-screen">
+            <div class="c-header">
+              <button class="c-back" data-go="c-build-list">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
+              </button>
+              <h1>Choose Template</h1>
+            </div>
+            <div class="c-body">
+              <div class="template-grid">
+
+                <div class="template-card">
+                  <h4>General Daily Check-in</h4>
+                  <div class="template-icons">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 4-3 5-3 8a3 3 0 0 1-6 0"/></svg>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="9" width="20" height="6" rx="3" transform="rotate(-30 12 12)"/></svg>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="8" cy="7" rx="2.2" ry="3"/><ellipse cx="16" cy="14" rx="2.2" ry="3"/></svg>
+                  </div>
+                  <p class="meta">6 questions</p>
+                  <button data-go="c-build-add">Use Template</button>
+                </div>
+
+                <div class="template-card">
+                  <h4>Post-Surgery Recovery</h4>
+                  <div class="template-icons">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="9" width="20" height="6" rx="3" transform="rotate(-30 12 12)"/></svg>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-4.5-9.5-9C.5 8 3 4 7 4c2 0 3.5 1 5 3 1.5-2 3-3 5-3 4 0 6.5 4 4.5 8C19 16.5 12 21 12 21Z"/></svg>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="8" cy="7" rx="2.2" ry="3"/><ellipse cx="16" cy="14" rx="2.2" ry="3"/></svg>
+                  </div>
+                  <p class="meta">5 questions</p>
+                  <button data-go="c-build-add">Use Template</button>
+                </div>
+
+                <div class="template-card">
+                  <h4>Fall Risk</h4>
+                  <div class="template-icons">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="8" cy="7" rx="2.2" ry="3"/><ellipse cx="16" cy="14" rx="2.2" ry="3"/></svg>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4a3 3 0 0 0-3 3v1a3 3 0 0 0-1 5 3 3 0 0 0 1 5v1a3 3 0 0 0 6 0V4Z"/></svg>
+                  </div>
+                  <p class="meta">4 questions</p>
+                  <button data-go="c-build-add">Use Template</button>
+                </div>
+
+                <div class="template-card">
+                  <h4>Pain Management</h4>
+                  <div class="template-icons">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-4.5-9.5-9C.5 8 3 4 7 4c2 0 3.5 1 5 3 1.5-2 3-3 5-3 4 0 6.5 4 4.5 8C19 16.5 12 21 12 21Z"/></svg>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="9" width="20" height="6" rx="3" transform="rotate(-30 12 12)"/></svg>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4a3 3 0 0 0-3 3v1a3 3 0 0 0-1 5 3 3 0 0 0 1 5v1a3 3 0 0 0 6 0V4Z"/></svg>
+                  </div>
+                  <p class="meta">3 questions</p>
+                  <button data-go="c-build-add">Use Template</button>
+                </div>
+
+                <div class="template-card scratch">
+                  <svg class="plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="M5 12h14"/></svg>
+                  <h4>Start from Scratch</h4>
+                  <button data-go="c-build-add">Create</button>
+                </div>
+
+              </div>
+            </div>
+            <div class="c-tabs">
+              <button class="c-tab" data-go="c-dashboard">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+                <span>Dashboard</span>
+              </button>
+              <button class="c-tab active" data-go="c-build-list">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.5 2.5-2.5-2.5 2.5-2.5Z"/></svg>
+                <span>Build</span>
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- Build: edit questionnaire (list of questions) -->
+        <section class="screen" data-screen="c-build-edit">
+          <div class="c-screen">
+            <div class="c-header">
+              <button class="c-back" data-go="c-build-list">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
+              </button>
+              <h1>Daily General Check-in</h1>
+            </div>
+            <div class="c-body">
+
+              <div class="q-card">
+                <div style="color:var(--gray-400);">⋮⋮</div>
+                <div class="avatar" style="background:var(--gray-100);width:36px;height:36px;color:var(--gray-500);">
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 4-3 5-3 8a3 3 0 0 1-6 0"/><path d="M9 12a3 3 0 0 1 6 0"/></svg>
+                </div>
+                <div class="q-card-info">
+                  <p class="qn">Hearing</p>
+                  <p class="qm" style="color:var(--teal);">Scale (1-5)</p>
+                </div>
+                <button class="q-edit" style="color:var(--red);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg></button>
+              </div>
+
+              <div class="q-card">
+                <div style="color:var(--gray-400);">⋮⋮</div>
+                <div class="avatar" style="background:var(--gray-100);width:36px;height:36px;color:var(--gray-500);">
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+                </div>
+                <div class="q-card-info">
+                  <p class="qn">Vision</p>
+                  <p class="qm" style="color:var(--teal);">Scale (1-5)</p>
+                </div>
+                <button class="q-edit" style="color:var(--red);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg></button>
+              </div>
+
+              <div class="q-card">
+                <div style="color:var(--gray-400);">⋮⋮</div>
+                <div class="avatar" style="background:var(--gray-100);width:36px;height:36px;color:var(--gray-500);">
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="9" width="20" height="6" rx="3" transform="rotate(-30 12 12)"/><path d="M9.5 5.6 14.4 18.4"/></svg>
+                </div>
+                <div class="q-card-info">
+                  <p class="qn">Medication</p>
+                  <p class="qm" style="color:var(--teal);">Yes/No</p>
+                </div>
+                <button class="q-edit" style="color:var(--red);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg></button>
+              </div>
+
+              <div class="q-card">
+                <div style="color:var(--gray-400);">⋮⋮</div>
+                <div class="avatar" style="background:var(--gray-100);width:36px;height:36px;color:var(--gray-500);">
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="8" cy="7" rx="2.2" ry="3"/><ellipse cx="16" cy="14" rx="2.2" ry="3"/></svg>
+                </div>
+                <div class="q-card-info">
+                  <p class="qn">Mobility</p>
+                  <p class="qm" style="color:var(--teal);">Scale (1-5)</p>
+                </div>
+                <button class="q-edit" style="color:var(--red);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg></button>
+              </div>
+
+              <div class="q-card">
+                <div style="color:var(--gray-400);">⋮⋮</div>
+                <div class="avatar" style="background:var(--gray-100);width:36px;height:36px;color:var(--gray-500);">
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4a3 3 0 0 0-3 3v1a3 3 0 0 0-1 5 3 3 0 0 0 1 5v1a3 3 0 0 0 6 0V4Z"/></svg>
+                </div>
+                <div class="q-card-info">
+                  <p class="qn">Cognition</p>
+                  <p class="qm" style="color:var(--teal);">Scale (1-5)</p>
+                </div>
+                <button class="q-edit" style="color:var(--red);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg></button>
+              </div>
+
+              <div class="q-card">
+                <div style="color:var(--gray-400);">⋮⋮</div>
+                <div class="avatar" style="background:var(--gray-100);width:36px;height:36px;color:var(--gray-500);">
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-4.5-9.5-9C.5 8 3 4 7 4c2 0 3.5 1 5 3 1.5-2 3-3 5-3 4 0 6.5 4 4.5 8C19 16.5 12 21 12 21Z"/></svg>
+                </div>
+                <div class="q-card-info">
+                  <p class="qn">Heart Rate</p>
+                  <p class="qm" style="color:var(--teal);">Yes/No</p>
+                </div>
+                <button class="q-edit" style="color:var(--red);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg></button>
+              </div>
+
+              <div style="height:14px;"></div>
+              <button class="btn-ghost" data-go="c-build-add">Add Question</button>
+              <div style="height:10px;"></div>
+              <button class="btn-secondary" data-go="c-build-preview">Preview</button>
+              <div style="height:10px;"></div>
+              <button class="btn-primary full">Save & Activate</button>
+
+            </div>
+            <div class="c-tabs">
+              <button class="c-tab" data-go="c-dashboard">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+                <span>Dashboard</span>
+              </button>
+              <button class="c-tab active" data-go="c-build-list">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.5 2.5-2.5-2.5 2.5-2.5Z"/></svg>
+                <span>Build</span>
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- Build: add question -->
+        <section class="screen" data-screen="c-build-add">
+          <div class="c-screen">
+            <div class="c-header">
+              <button class="c-back" data-go="c-build-edit">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
+              </button>
+              <h1>Add Question</h1>
+            </div>
+            <div class="c-body">
+
+              <label class="form-label">Image</label>
+              <div class="seg" style="margin-bottom:14px;">
+                <button class="active">Icon Library</button>
+                <button>Custom Upload</button>
+              </div>
+
+              <div class="chip-row">
+                <button class="chip active">Senses</button>
+                <button class="chip">Mobility</button>
+                <button class="chip">Vitals</button>
+                <button class="chip">Daily Living</button>
+                <button class="chip">Emotional</button>
+                <button class="chip">Pain</button>
+              </div>
+
+              <div class="icon-grid" style="margin-bottom:18px;">
+                <div class="icon-cell active">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 4-3 5-3 8a3 3 0 0 1-6 0"/><path d="M9 12a3 3 0 0 1 6 0"/></svg>
+                  <span>Hearing</span>
+                </div>
+                <div class="icon-cell">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+                  <span>Vision</span>
+                </div>
+                <div class="icon-cell">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="8" cy="7" rx="2.2" ry="3"/><ellipse cx="16" cy="14" rx="2.2" ry="3"/></svg>
+                  <span>Walking</span>
+                </div>
+                <div class="icon-cell">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="9" width="20" height="6" rx="3" transform="rotate(-30 12 12)"/><path d="M9.5 5.6 14.4 18.4"/></svg>
+                  <span>Medication</span>
+                </div>
+                <div class="icon-cell">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-4.5-9.5-9C.5 8 3 4 7 4c2 0 3.5 1 5 3 1.5-2 3-3 5-3 4 0 6.5 4 4.5 8C19 16.5 12 21 12 21Z"/></svg>
+                  <span>Heart Rate</span>
+                </div>
+                <div class="icon-cell">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2c-1 4-4 5-4 9a4 4 0 0 0 8 0c0-4-3-5-4-9Z"/></svg>
+                  <span>Hydration</span>
+                </div>
+                <div class="icon-cell">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="10" width="18" height="8" rx="2"/><path d="M3 14h18"/><path d="M5 10V8a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v2"/></svg>
+                  <span>Sleep</span>
+                </div>
+                <div class="icon-cell">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4a3 3 0 0 0-3 3v1a3 3 0 0 0-1 5 3 3 0 0 0 1 5v1a3 3 0 0 0 6 0V4Z"/><path d="M15 4a3 3 0 0 1 3 3v1a3 3 0 0 1 1 5 3 3 0 0 1-1 5v1a3 3 0 0 1-6 0V4Z"/></svg>
+                  <span>Cognition</span>
+                </div>
+                <div class="icon-cell">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h18"/><path d="M3 12h12"/><path d="M3 16h18"/></svg>
+                  <span>Breathing</span>
+                </div>
+              </div>
+
+              <label class="form-label">Description (caregivers only)</label>
+              <input class="form-input" placeholder="e.g. How well can you hear today?" />
+
+              <div style="height:18px;"></div>
+
+              <label class="form-label">Response Type</label>
+              <div class="response-grid" style="margin-bottom:18px;">
+                <div class="response-cell active">
+                  <div class="preview">😣 😟 😐 🙂 😄</div>
+                  <span class="label">Scale (1-5)</span>
+                </div>
+                <div class="response-cell">
+                  <div class="preview" style="display:flex;justify-content:center;gap:6px;">
+                    <span style="display:inline-flex;width:18px;height:18px;background:var(--green);color:#fff;border-radius:4px;align-items:center;justify-content:center;font-size:12px;">✓</span>
+                    <span style="display:inline-flex;width:18px;height:18px;background:var(--red);color:#fff;border-radius:4px;align-items:center;justify-content:center;font-size:12px;">✗</span>
+                  </div>
+                  <span class="label">Yes / No</span>
+                </div>
+              </div>
+
+              <div class="threshold-card" id="threshold-card">
+                <div class="threshold-toggle" id="threshold-toggle">
+                  <h4>Alert Threshold</h4>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+                </div>
+                <div class="threshold-body">
+                  <div class="threshold-row">
+                    <label class="small-label">Trigger when score ≤</label>
+                    <select>
+                      <option>1</option>
+                      <option selected>2</option>
+                      <option>3</option>
+                    </select>
+                  </div>
+                  <div class="threshold-row">
+                    <label class="small-label">For consecutive days</label>
+                    <select>
+                      <option>2</option>
+                      <option selected>3</option>
+                      <option>5</option>
+                      <option>7</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <button class="btn-primary full" data-go="c-build-edit">Save Question</button>
+
+            </div>
+            <div class="c-tabs">
+              <button class="c-tab" data-go="c-dashboard">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+                <span>Dashboard</span>
+              </button>
+              <button class="c-tab active" data-go="c-build-list">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.5 2.5-2.5-2.5 2.5-2.5Z"/></svg>
+                <span>Build</span>
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- Build: preview -->
+        <section class="screen" data-screen="c-build-preview">
+          <div class="c-screen">
+            <div class="c-header">
+              <button class="c-back" data-go="c-build-edit">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
+              </button>
+              <h1>Preview</h1>
+            </div>
+            <div class="c-body">
+
+              <div class="mini-phone-wrap">
+                <div class="mini-phone">
+                  <div class="mini-progress">
+                    <span class="d active"></span>
+                    <span class="d"></span>
+                    <span class="d"></span>
+                    <span class="d"></span>
+                    <span class="d"></span>
+                    <span class="d"></span>
+                  </div>
+                  <div class="mini-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 4-3 5-3 8a3 3 0 0 1-6 0"/><path d="M9 12a3 3 0 0 1 6 0"/></svg>
+                  </div>
+                  <div class="mini-smileys">
+                    <div class="mini-smiley s1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 16c1-2 2.5-3 4-3s3 1 4 3"/></svg></div>
+                    <div class="mini-smiley s2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 15h8"/></svg></div>
+                    <div class="mini-smiley s3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 14.5h8"/></svg></div>
+                    <div class="mini-smiley s4"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 13c1 2 2.5 3 4 3s3-1 4-3"/></svg></div>
+                    <div class="mini-smiley s5"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M7 13c1.5 3 3 4 5 4s3.5-1 5-4"/></svg></div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="preview-nav">
+                <button>‹ Previous</button>
+                <span style="font-weight:700;color:var(--gray-700);">1 / 6</span>
+                <button>Next ›</button>
+              </div>
+
+              <button class="btn-primary full" data-go="c-build-edit">Looks Good</button>
+
+            </div>
+            <div class="c-tabs">
+              <button class="c-tab" data-go="c-dashboard">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+                <span>Dashboard</span>
+              </button>
+              <button class="c-tab active" data-go="c-build-list">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.5 2.5-2.5-2.5 2.5-2.5Z"/></svg>
+                <span>Build</span>
+              </button>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<p class="root-note">
+  The Seraya tree (Shorea curtisii) towers above the canopy of Borneo's dipterocarp forests,
+  its great height held by buttress roots that fan wide at its base.
+  We hope this app honours that image — elders standing tall, supported by the network of those who care for them.
+</p>
+
+<script>
+  // -------- App toggle --------
+  const toggleButtons = document.querySelectorAll('.toggle button');
+  const phones = {
+    elderly:   document.getElementById('phone-elderly'),
+    caregiver: document.getElementById('phone-caregiver')
+  };
+  toggleButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      toggleButtons.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const app = btn.dataset.app;
+      phones.elderly.style.display   = app === 'elderly'   ? '' : 'none';
+      phones.caregiver.style.display = app === 'caregiver' ? '' : 'none';
+    });
+  });
+
+  // -------- Generic screen navigation --------
+  function goTo(appId, screenName) {
+    const app = document.getElementById('app-' + appId);
+    if (!app) return;
+    app.querySelectorAll(':scope > .screen').forEach(s => s.classList.remove('active'));
+    const target = app.querySelector(`[data-screen="${screenName}"]`);
+    if (target) {
+      target.classList.add('active');
+      target.scrollTop = 0;
+    }
+  }
+
+  // Caregiver-side navigation
+  document.getElementById('app-caregiver').addEventListener('click', e => {
+    const trigger = e.target.closest('[data-go]');
+    if (!trigger) return;
+    const target = trigger.dataset.go;
+    goTo('caregiver', target);
+  });
+
+  // Elderly-side: smiley/boolean tap → next screen with subtle delay (Duolingo feel)
+  document.getElementById('app-elderly').addEventListener('click', e => {
+    const trigger = e.target.closest('[data-next]');
+    if (!trigger) return;
+    trigger.style.transform = 'scale(.86)';
+    setTimeout(() => { trigger.style.transform = ''; }, 140);
+    setTimeout(() => {
+      const target = trigger.dataset.next;
+      goTo('elderly', target);
+      if (target === 'e-complete') burstConfetti();
+    }, 360);
+  });
+
+  // Restart elderly flow
+  document.getElementById('e-restart').addEventListener('click', () => {
+    goTo('elderly', 'e-q1');
+  });
+
+  // -------- Confetti --------
+  function burstConfetti() {
+    const stage = document.getElementById('e-complete-stage');
+    // clear old
+    stage.querySelectorAll('.confetti').forEach(c => c.remove());
+    const colors = ['#F47272', '#F5A663', '#F0C75E', '#5BC07F', '#0F766E', '#14B8A6'];
+    for (let i = 0; i < 36; i++) {
+      const piece = document.createElement('span');
+      piece.className = 'confetti';
+      piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+      piece.style.left = (Math.random() * 100) + '%';
+      piece.style.top = (-20 - Math.random() * 80) + 'px';
+      piece.style.animationDelay = (Math.random() * 0.4) + 's';
+      piece.style.animationDuration = (2.4 + Math.random() * 1.4) + 's';
+      piece.style.transform = `rotate(${Math.random() * 360}deg)`;
+      stage.appendChild(piece);
+    }
+  }
+
+  // -------- Heatmap day modal --------
+  const dayBtn  = document.getElementById('day30');
+  const dayModal = document.getElementById('heatmap-day-modal');
+  const dayClose = document.getElementById('day-modal-close');
+  const dayScrim = document.getElementById('heatmap-scrim');
+  function openDay() { dayModal.classList.add('open'); dayScrim.classList.add('open'); }
+  function closeDay() { dayModal.classList.remove('open'); dayScrim.classList.remove('open'); }
+  if (dayBtn)   dayBtn.addEventListener('click', openDay);
+  if (dayClose) dayClose.addEventListener('click', closeDay);
+  if (dayScrim) dayScrim.addEventListener('click', closeDay);
+
+  // -------- Threshold accordion --------
+  const tCard = document.getElementById('threshold-card');
+  const tTog  = document.getElementById('threshold-toggle');
+  if (tTog) tTog.addEventListener('click', () => tCard.classList.toggle('open'));
+
+  // -------- Pills (date filter) demo selection --------
+  document.querySelectorAll('.pills').forEach(group => {
+    group.addEventListener('click', e => {
+      const btn = e.target.closest('.pill');
+      if (!btn) return;
+      group.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+    });
+  });
+
+  // -------- Question pills (icon row above chart) --------
+  document.querySelectorAll('.question-pills').forEach(group => {
+    group.addEventListener('click', e => {
+      const btn = e.target.closest('.qp');
+      if (!btn) return;
+      group.querySelectorAll('.qp').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+    });
+  });
+
+  // -------- Category chips inside Add Question --------
+  document.querySelectorAll('.chip-row').forEach(group => {
+    group.addEventListener('click', e => {
+      const btn = e.target.closest('.chip');
+      if (!btn) return;
+      group.querySelectorAll('.chip').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+    });
+  });
+
+  // -------- Icon grid selection --------
+  document.querySelectorAll('.icon-grid').forEach(group => {
+    group.addEventListener('click', e => {
+      const btn = e.target.closest('.icon-cell');
+      if (!btn) return;
+      group.querySelectorAll('.icon-cell').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+    });
+  });
+
+  // -------- Response cell selection --------
+  document.querySelectorAll('.response-grid').forEach(group => {
+    group.addEventListener('click', e => {
+      const btn = e.target.closest('.response-cell');
+      if (!btn) return;
+      group.querySelectorAll('.response-cell').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+    });
+  });
+
+  // -------- Segmented controls --------
+  document.querySelectorAll('.seg').forEach(group => {
+    group.addEventListener('click', e => {
+      const btn = e.target.closest('button');
+      if (!btn) return;
+      group.querySelectorAll('button').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+    });
+  });
+</script>
+</body>
+</html>

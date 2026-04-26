@@ -1,0 +1,98 @@
+# =========================================================
+# Seraya — root .gitignore
+# Subfolder .gitignores in backend/, caregiver-app/, elderly-app/
+# add layer-specific rules; this file covers the rest.
+# =========================================================
+
+# ----- Dependencies -----
+node_modules/
+.pnp
+.pnp.js
+.yarn/install-state.gz
+
+# ----- Environment files (NEVER commit) -----
+.env
+.env.local
+.env.*.local
+.env.development
+.env.production
+.env.test
+.env.development.local
+.env.production.local
+.env.test.local
+
+# ----- Convex -----
+# Local Convex state (deployment URL, dev creds)
+.convex/
+
+# ----- Expo / React Native -----
+.expo/
+.expo-shared/
+dist/
+web-build/
+expo-env.d.ts
+.metro-health-check*
+
+# ----- Native build outputs -----
+/ios/build/
+/android/build/
+/android/app/build/
+/android/.gradle/
+*.apk
+*.ipa
+*.aab
+
+# ----- Native signing artefacts -----
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+*.pem
+
+# ----- TypeScript -----
+*.tsbuildinfo
+.tsbuildinfo/
+
+# ----- Logs & debug -----
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+*.log
+logs/
+
+# ----- Test / coverage -----
+coverage/
+.nyc_output/
+
+# ----- OS files -----
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# ----- Editor / IDE -----
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# ----- Misc -----
+*.orig.*
+.kotlin/
+
+# internal references
+design-reference/
+cursor-prompt-elderly-health-tracker.md
+
+# AI prompt/orchestration files
+backend/CLAUDE.md
+backend/AGENTS.md
+backend/.agents/
+backend/.claude//
