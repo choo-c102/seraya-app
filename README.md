@@ -35,7 +35,7 @@ This repository contains the Convex backend and an interactive HTML front-end pr
 
 ## Interactive Preview
 
-This repository includes a self-contained interactive front-end preview. To see it in action, simply open the `seraya-preview.html` file in your web browser. No backend setup is required to explore the UI and user flows.
+This repository includes a self-contained interactive front-end preview. To see it in action, simply open the `seraya-preview.html` file in your web browser. Or use the published html page 'https://choo-c102.github.io/seraya-app/seraya-preview.html'. No backend setup is required to explore the UI and user flows.
 
 ## Project Structure
 
