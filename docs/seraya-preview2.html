@@ -1,0 +1,1166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Seraya — Expanded Preview</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #F7F4EF;
+    --cream-dark: #EDE9E1;
+    --bark: #2C2416;
+    --bark-mid: #5A4F3E;
+    --bark-light: #8C7D68;
+    --moss: #3D6B4F;
+    --moss-light: #D4E8DB;
+    --moss-pale: #EAF3EE;
+    --amber: #C4782A;
+    --amber-light: #F5E4CC;
+    --amber-pale: #FBF3E8;
+    --red-alert: #C0392B;
+    --red-light: #FDECEA;
+    --blue: #2D5986;
+    --blue-light: #D8E6F5;
+    --blue-pale: #EEF4FB;
+    --gold: #B8960C;
+    --gold-light: #FDF6D3;
+    --white: #FFFFFF;
+    --shadow-sm: 0 1px 3px rgba(44,36,22,0.08);
+    --shadow-md: 0 4px 16px rgba(44,36,22,0.10);
+    --shadow-lg: 0 8px 32px rgba(44,36,22,0.13);
+    --radius: 14px;
+    --radius-sm: 8px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--cream);
+    color: var(--bark);
+    min-height: 100vh;
+  }
+
+  /* ─── LANDING ─── */
+  .landing {
+    display: flex; flex-direction: column; align-items: center;
+    justify-content: center; min-height: 100vh;
+    padding: 48px 24px; text-align: center;
+  }
+  .landing-logo { font-family: 'DM Serif Display', serif; font-size: 42px; color: var(--bark); letter-spacing: -1px; margin-bottom: 6px; }
+  .landing-sub { font-size: 13px; color: var(--bark-light); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 10px; }
+  .landing-tagline { font-family: 'DM Serif Display', serif; font-style: italic; font-size: 16px; color: var(--bark-mid); margin-bottom: 40px; }
+  .landing-btns { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
+  .btn-primary {
+    background: var(--bark); color: var(--cream); border: none;
+    padding: 13px 28px; border-radius: 50px; font-family: 'DM Sans', sans-serif;
+    font-size: 14px; font-weight: 500; cursor: pointer; transition: all 0.2s;
+    letter-spacing: 0.02em;
+  }
+  .btn-primary:hover { background: var(--bark-mid); transform: translateY(-1px); box-shadow: var(--shadow-md); }
+  .btn-outline {
+    background: transparent; color: var(--bark); border: 1.5px solid var(--bark-light);
+    padding: 13px 28px; border-radius: 50px; font-family: 'DM Sans', sans-serif;
+    font-size: 14px; font-weight: 500; cursor: pointer; transition: all 0.2s;
+  }
+  .btn-outline:hover { border-color: var(--bark); background: var(--cream-dark); }
+  .landing-note { margin-top: 48px; font-size: 11px; color: var(--bark-light); max-width: 340px; line-height: 1.6; font-style: italic; }
+
+  /* ─── PHONE SHELL ─── */
+  .screen { display: none; }
+  .screen.active { display: flex; flex-direction: column; min-height: 100vh; }
+  .phone-shell {
+    display: flex; justify-content: center; align-items: flex-start;
+    padding: 32px 16px 60px; min-height: 100vh; background: var(--cream);
+  }
+  .phone {
+    width: 390px; min-height: 780px; background: var(--white);
+    border-radius: 44px; box-shadow: var(--shadow-lg), 0 0 0 1px rgba(44,36,22,0.06);
+    overflow: hidden; display: flex; flex-direction: column; position: relative;
+  }
+  .phone-status {
+    padding: 16px 28px 6px; display: flex; justify-content: space-between;
+    align-items: center; font-size: 12px; font-weight: 600; color: var(--bark);
+    background: var(--white);
+  }
+  .phone-content { flex: 1; overflow-y: auto; overflow-x: hidden; }
+  .phone-content::-webkit-scrollbar { display: none; }
+
+  /* ─── ELDERLY FLOW ─── */
+  .elderly-header {
+    padding: 28px 28px 20px; background: var(--moss-pale);
+    border-bottom: 1px solid var(--moss-light);
+  }
+  .elderly-logo { font-family: 'DM Serif Display', serif; font-size: 22px; color: var(--moss); }
+  .elderly-greeting { font-size: 13px; color: var(--bark-mid); margin-top: 2px; }
+  .question-card {
+    margin: 20px 20px 0; padding: 28px 24px;
+    background: var(--white); border: 1px solid var(--cream-dark);
+    border-radius: var(--radius); box-shadow: var(--shadow-sm);
+  }
+  .q-icon { font-size: 40px; text-align: center; margin-bottom: 14px; }
+  .q-text { font-family: 'DM Serif Display', serif; font-size: 22px; text-align: center; color: var(--bark); line-height: 1.3; margin-bottom: 24px; }
+  .smiley-row { display: flex; justify-content: space-around; padding: 0 4px; margin-bottom: 8px; }
+  .smiley-btn {
+    font-size: 32px; background: none; border: 2.5px solid transparent;
+    border-radius: 50%; width: 56px; height: 56px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.18s; line-height: 1;
+  }
+  .smiley-btn:hover { background: var(--cream-dark); border-color: var(--bark-light); transform: scale(1.1); }
+  .smiley-btn.selected { border-color: var(--moss); background: var(--moss-pale); transform: scale(1.12); }
+  .smiley-labels { display: flex; justify-content: space-between; padding: 0 8px; }
+  .smiley-labels span { font-size: 10px; color: var(--bark-light); }
+  .yn-row { display: flex; gap: 12px; margin-top: 4px; }
+  .yn-btn {
+    flex: 1; padding: 16px; border-radius: var(--radius-sm); border: 2px solid var(--cream-dark);
+    font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.18s;
+    background: var(--cream); color: var(--bark);
+  }
+  .yn-btn.yes:hover, .yn-btn.yes.selected { background: var(--moss-pale); border-color: var(--moss); color: var(--moss); }
+  .yn-btn.no:hover, .yn-btn.no.selected { background: var(--red-light); border-color: var(--red-alert); color: var(--red-alert); }
+  .progress-bar-wrap { margin: 20px 20px 0; }
+  .progress-label { font-size: 12px; color: var(--bark-light); margin-bottom: 6px; }
+  .progress-bar { height: 5px; background: var(--cream-dark); border-radius: 3px; }
+  .progress-fill { height: 5px; background: var(--moss); border-radius: 3px; transition: width 0.4s ease; }
+  .q-nav { display: flex; justify-content: space-between; margin: 16px 20px 0; }
+  .q-nav-btn {
+    padding: 10px 22px; border-radius: 50px; border: 1.5px solid var(--cream-dark);
+    background: var(--white); font-size: 13px; font-weight: 500; cursor: pointer;
+    color: var(--bark); transition: all 0.18s;
+  }
+  .q-nav-btn.next { background: var(--moss); color: var(--white); border-color: var(--moss); }
+  .q-nav-btn:hover { box-shadow: var(--shadow-sm); }
+  .complete-card {
+    margin: 40px 20px; padding: 40px 24px; text-align: center;
+    background: var(--moss-pale); border-radius: var(--radius);
+    border: 1px solid var(--moss-light);
+  }
+  .complete-icon { font-size: 52px; margin-bottom: 16px; }
+  .complete-title { font-family: 'DM Serif Display', serif; font-size: 26px; color: var(--moss); margin-bottom: 8px; }
+  .complete-sub { font-size: 14px; color: var(--bark-mid); line-height: 1.6; }
+
+  /* ─── CAREGIVER NAV ─── */
+  .cg-nav {
+    display: flex; background: var(--white); border-top: 1px solid var(--cream-dark);
+    padding: 8px 0 20px; position: sticky; bottom: 0;
+  }
+  .cg-nav-item {
+    flex: 1; display: flex; flex-direction: column; align-items: center;
+    gap: 3px; padding: 6px 4px; cursor: pointer; transition: all 0.15s;
+    border: none; background: none; color: var(--bark-light); font-family: 'DM Sans', sans-serif;
+  }
+  .cg-nav-item.active { color: var(--moss); }
+  .cg-nav-item svg { width: 20px; height: 20px; }
+  .cg-nav-label { font-size: 10px; font-weight: 500; letter-spacing: 0.03em; }
+
+  /* ─── CAREGIVER SCREENS ─── */
+  .cg-topbar {
+    padding: 20px 22px 14px; background: var(--white);
+    border-bottom: 1px solid var(--cream-dark);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .cg-topbar-title { font-family: 'DM Serif Display', serif; font-size: 22px; color: var(--bark); }
+  .cg-topbar-sub { font-size: 12px; color: var(--bark-light); margin-top: 1px; }
+  .notif-badge {
+    background: var(--red-alert); color: white; font-size: 11px; font-weight: 600;
+    width: 20px; height: 20px; border-radius: 50%; display: flex;
+    align-items: center; justify-content: center;
+  }
+  .cg-content { padding: 16px 18px; flex: 1; overflow-y: auto; }
+  .cg-content::-webkit-scrollbar { display: none; }
+
+  /* Patient cards */
+  .patient-card {
+    background: var(--white); border: 1px solid var(--cream-dark);
+    border-radius: var(--radius); padding: 16px; margin-bottom: 10px;
+    cursor: pointer; transition: all 0.2s; box-shadow: var(--shadow-sm);
+  }
+  .patient-card:hover { box-shadow: var(--shadow-md); transform: translateY(-1px); }
+  .patient-card.alert-card { border-left: 3px solid var(--red-alert); }
+  .patient-card-top { display: flex; align-items: center; gap: 12px; }
+  .avatar {
+    width: 42px; height: 42px; border-radius: 50%; display: flex;
+    align-items: center; justify-content: center; font-weight: 600;
+    font-size: 14px; flex-shrink: 0;
+  }
+  .av-green { background: var(--moss-light); color: var(--moss); }
+  .av-amber { background: var(--amber-light); color: var(--amber); }
+  .av-blue { background: var(--blue-light); color: var(--blue); }
+  .patient-name { font-size: 15px; font-weight: 600; color: var(--bark); }
+  .patient-meta { font-size: 12px; color: var(--bark-light); margin-top: 1px; }
+  .status-pill {
+    margin-left: auto; padding: 4px 10px; border-radius: 20px;
+    font-size: 11px; font-weight: 600; letter-spacing: 0.03em;
+  }
+  .pill-done { background: var(--moss-light); color: var(--moss); }
+  .pill-missed { background: var(--red-light); color: var(--red-alert); }
+  .pill-pending { background: var(--amber-pale); color: var(--amber); }
+  .patient-card-scores {
+    display: flex; gap: 6px; margin-top: 12px; flex-wrap: wrap;
+  }
+  .score-chip {
+    display: flex; align-items: center; gap: 5px; padding: 4px 9px;
+    background: var(--cream); border: 1px solid var(--cream-dark);
+    border-radius: 20px; font-size: 11px; color: var(--bark-mid);
+  }
+  .score-chip.warn { background: var(--red-light); border-color: #f5c0bb; color: var(--red-alert); }
+  .score-dot { width: 6px; height: 6px; border-radius: 50%; }
+  .dot-green { background: var(--moss); }
+  .dot-red { background: var(--red-alert); }
+  .dot-amber { background: var(--amber); }
+
+  /* ─── PATIENT DETAIL ─── */
+  .back-btn {
+    display: flex; align-items: center; gap: 6px; font-size: 13px;
+    color: var(--bark-mid); cursor: pointer; padding: 12px 18px 0;
+    background: none; border: none; font-family: 'DM Sans', sans-serif;
+  }
+  .back-btn:hover { color: var(--bark); }
+  .patient-hero {
+    padding: 16px 18px 14px; background: var(--white);
+    border-bottom: 1px solid var(--cream-dark);
+  }
+  .patient-hero-top { display: flex; align-items: center; gap: 14px; margin-bottom: 12px; }
+  .patient-hero-name { font-family: 'DM Serif Display', serif; font-size: 22px; color: var(--bark); }
+  .patient-hero-meta { font-size: 12px; color: var(--bark-light); }
+  .alert-banner {
+    background: var(--red-light); border: 1px solid #f5c0bb;
+    border-radius: var(--radius-sm); padding: 10px 14px;
+    display: flex; align-items: flex-start; gap: 10px;
+    font-size: 13px; color: var(--red-alert);
+  }
+
+  /* Tabs */
+  .tabs { display: flex; gap: 0; border-bottom: 1px solid var(--cream-dark); background: var(--white); padding: 0 18px; }
+  .tab {
+    padding: 12px 14px; font-size: 13px; font-weight: 500; cursor: pointer;
+    color: var(--bark-light); border-bottom: 2px solid transparent;
+    margin-bottom: -1px; transition: all 0.15s; white-space: nowrap;
+  }
+  .tab.active { color: var(--moss); border-bottom-color: var(--moss); }
+  .tab-panel { display: none; padding: 16px 18px; }
+  .tab-panel.active { display: block; }
+
+  /* Chart area */
+  .chart-section { background: var(--white); border: 1px solid var(--cream-dark); border-radius: var(--radius); padding: 16px; margin-bottom: 12px; }
+  .chart-section-title { font-size: 13px; font-weight: 600; color: var(--bark); margin-bottom: 4px; }
+  .chart-section-sub { font-size: 11px; color: var(--bark-light); margin-bottom: 14px; }
+  .time-range-pills { display: flex; gap: 6px; margin-bottom: 14px; flex-wrap: wrap; }
+  .range-pill {
+    padding: 4px 11px; border-radius: 20px; font-size: 11px; font-weight: 500;
+    background: var(--cream); border: 1px solid var(--cream-dark); cursor: pointer;
+    color: var(--bark-mid); transition: all 0.15s;
+  }
+  .range-pill.active { background: var(--bark); color: var(--white); border-color: var(--bark); }
+
+  canvas { width: 100% !important; border-radius: 8px; }
+
+  /* Multi-metric chart legend */
+  .chart-legend { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 10px; }
+  .legend-item { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--bark-mid); }
+  .legend-dot { width: 8px; height: 8px; border-radius: 50%; }
+
+  /* Summary stats */
+  .stat-row { display: flex; gap: 8px; margin-bottom: 12px; }
+  .stat-box {
+    flex: 1; background: var(--cream); border: 1px solid var(--cream-dark);
+    border-radius: var(--radius-sm); padding: 12px 10px; text-align: center;
+  }
+  .stat-val { font-family: 'DM Serif Display', serif; font-size: 22px; color: var(--bark); }
+  .stat-val.warn { color: var(--red-alert); }
+  .stat-val.ok { color: var(--moss); }
+  .stat-label { font-size: 10px; color: var(--bark-light); margin-top: 2px; }
+  .stat-trend { font-size: 11px; font-weight: 600; margin-top: 3px; }
+  .trend-down { color: var(--red-alert); }
+  .trend-up { color: var(--moss); }
+  .trend-flat { color: var(--bark-light); }
+
+  /* Heatmap */
+  .heatmap-grid { display: grid; grid-template-columns: repeat(7,1fr); gap: 4px; margin-bottom: 10px; }
+  .hm-header { font-size: 10px; color: var(--bark-light); text-align: center; padding: 2px 0; font-weight: 600; }
+  .hm-cell {
+    aspect-ratio: 1; border-radius: 4px; cursor: pointer;
+    transition: transform 0.15s, box-shadow 0.15s; position: relative;
+  }
+  .hm-cell:hover { transform: scale(1.15); box-shadow: var(--shadow-md); z-index: 2; }
+  .hm-5 { background: #2D6B4A; }
+  .hm-4 { background: #5A9E78; }
+  .hm-3 { background: #A8CDB8; }
+  .hm-2 { background: #F5C8A0; }
+  .hm-1 { background: #E07B5A; }
+  .hm-0 { background: var(--cream-dark); }
+  .hm-legend { display: flex; align-items: center; gap: 6px; font-size: 10px; color: var(--bark-light); margin-top: 8px; }
+  .hm-legend-swatch { width: 10px; height: 10px; border-radius: 2px; }
+
+  /* Day detail popup */
+  .day-detail {
+    background: var(--cream); border: 1px solid var(--cream-dark);
+    border-radius: var(--radius-sm); padding: 14px; margin-top: 12px;
+    animation: slideDown 0.2s ease;
+  }
+  @keyframes slideDown { from { opacity:0; transform:translateY(-6px); } to { opacity:1; transform:translateY(0); } }
+  .day-detail-title { font-size: 12px; font-weight: 600; color: var(--bark); margin-bottom: 10px; }
+  .day-metric-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 7px; }
+  .day-metric-name { font-size: 12px; color: var(--bark-mid); display: flex; align-items: center; gap: 6px; }
+  .day-metric-score { display: flex; gap: 3px; }
+  .score-dot-sm { width: 8px; height: 8px; border-radius: 50%; }
+  .sd-filled { background: var(--moss); }
+  .sd-warn { background: var(--amber); }
+  .sd-low { background: var(--red-alert); }
+  .sd-empty { background: var(--cream-dark); }
+
+  /* ─── INSIGHTS TAB ─── */
+  .insight-card {
+    background: var(--white); border: 1px solid var(--cream-dark);
+    border-radius: var(--radius); margin-bottom: 12px; overflow: hidden;
+    box-shadow: var(--shadow-sm);
+  }
+  .insight-card.urgent { border-left: 3px solid var(--red-alert); }
+  .insight-card.moderate { border-left: 3px solid var(--amber); }
+  .insight-card.positive { border-left: 3px solid var(--moss); }
+  .insight-header {
+    padding: 14px 16px; cursor: pointer;
+    display: flex; align-items: flex-start; gap: 12px;
+  }
+  .insight-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+  .insight-title { font-size: 14px; font-weight: 600; color: var(--bark); line-height: 1.3; }
+  .insight-meta { font-size: 11px; color: var(--bark-light); margin-top: 2px; }
+  .insight-chevron { margin-left: auto; color: var(--bark-light); transition: transform 0.2s; font-size: 12px; flex-shrink: 0; }
+  .insight-chevron.open { transform: rotate(180deg); }
+  .insight-body { display: none; padding: 0 16px 16px; border-top: 1px solid var(--cream-dark); }
+  .insight-body.open { display: block; }
+  .insight-summary {
+    font-size: 13px; color: var(--bark-mid); line-height: 1.6;
+    padding: 12px 0 10px;
+  }
+  .insight-actions { margin-bottom: 12px; }
+  .insight-actions-title { font-size: 11px; font-weight: 600; color: var(--bark); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px; }
+  .action-item {
+    display: flex; align-items: flex-start; gap: 8px;
+    font-size: 12px; color: var(--bark-mid); margin-bottom: 7px; line-height: 1.5;
+  }
+  .action-num {
+    width: 18px; height: 18px; border-radius: 50%; background: var(--bark);
+    color: var(--cream); font-size: 10px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px;
+  }
+  .action-num.warn { background: var(--red-alert); }
+  .action-num.amber { background: var(--amber); }
+  .resources-section { background: var(--cream); border-radius: var(--radius-sm); padding: 12px 14px; }
+  .resources-title { font-size: 11px; font-weight: 600; color: var(--bark); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 10px; }
+  .resource-item {
+    display: flex; align-items: flex-start; gap: 10px;
+    padding: 9px 0; border-bottom: 1px solid var(--cream-dark); cursor: pointer;
+  }
+  .resource-item:last-child { border-bottom: none; padding-bottom: 0; }
+  .resource-icon { font-size: 16px; flex-shrink: 0; }
+  .resource-name { font-size: 12px; font-weight: 600; color: var(--bark); }
+  .resource-desc { font-size: 11px; color: var(--bark-light); margin-top: 1px; line-height: 1.4; }
+  .resource-tag {
+    margin-left: auto; padding: 2px 7px; border-radius: 10px;
+    font-size: 10px; font-weight: 600; white-space: nowrap; flex-shrink: 0;
+  }
+  .tag-gov { background: var(--blue-light); color: var(--blue); }
+  .tag-ngo { background: var(--moss-light); color: var(--moss); }
+  .tag-clinic { background: var(--amber-light); color: var(--amber); }
+
+  /* Insights overview banner (on dashboard) */
+  .insights-banner {
+    background: linear-gradient(135deg, #2C2416 0%, #3D6B4F 100%);
+    border-radius: var(--radius); padding: 16px 18px; margin-bottom: 12px;
+    cursor: pointer; transition: opacity 0.15s;
+  }
+  .insights-banner:hover { opacity: 0.92; }
+  .ib-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+  .ib-label { font-size: 11px; color: rgba(247,244,239,0.7); text-transform: uppercase; letter-spacing: 0.08em; font-weight: 600; }
+  .ib-badge { background: var(--red-alert); color: white; font-size: 11px; font-weight: 700; padding: 3px 9px; border-radius: 20px; }
+  .ib-title { font-family: 'DM Serif Display', serif; font-size: 17px; color: var(--cream); line-height: 1.3; margin-bottom: 10px; }
+  .ib-items { display: flex; gap: 8px; flex-wrap: wrap; }
+  .ib-chip { background: rgba(247,244,239,0.15); color: var(--cream); font-size: 11px; padding: 4px 10px; border-radius: 20px; }
+
+  /* Section headers */
+  .section-header { font-size: 11px; font-weight: 600; color: var(--bark-light); text-transform: uppercase; letter-spacing: 0.07em; margin: 16px 0 8px; }
+
+  /* Comparison chart */
+  .comparison-bars { margin-top: 10px; }
+  .comp-row { margin-bottom: 10px; }
+  .comp-label-row { display: flex; justify-content: space-between; margin-bottom: 4px; }
+  .comp-name { font-size: 12px; color: var(--bark-mid); }
+  .comp-val { font-size: 12px; font-weight: 600; color: var(--bark); }
+  .comp-bar-bg { height: 6px; background: var(--cream-dark); border-radius: 3px; }
+  .comp-bar-fill { height: 6px; border-radius: 3px; transition: width 1s ease; }
+
+  /* Notification items */
+  .notif-item {
+    display: flex; align-items: flex-start; gap: 12px;
+    padding: 14px 0; border-bottom: 1px solid var(--cream-dark);
+  }
+  .notif-item:last-child { border-bottom: none; }
+  .notif-dot { width: 8px; height: 8px; border-radius: 50%; margin-top: 5px; flex-shrink: 0; }
+  .notif-content { flex: 1; }
+  .notif-title { font-size: 13px; font-weight: 600; color: var(--bark); }
+  .notif-sub { font-size: 12px; color: var(--bark-light); margin-top: 2px; }
+  .notif-time { font-size: 11px; color: var(--bark-light); }
+
+  /* Build screen */
+  .build-item {
+    background: var(--white); border: 1px solid var(--cream-dark);
+    border-radius: var(--radius); padding: 14px 16px; margin-bottom: 10px;
+    display: flex; align-items: center; gap: 12px; cursor: pointer;
+    transition: all 0.15s; box-shadow: var(--shadow-sm);
+  }
+  .build-item:hover { box-shadow: var(--shadow-md); transform: translateY(-1px); }
+  .build-item-info { flex: 1; }
+  .build-item-name { font-size: 14px; font-weight: 600; color: var(--bark); }
+  .build-item-sub { font-size: 12px; color: var(--bark-light); margin-top: 2px; }
+  .build-active { padding: 3px 8px; border-radius: 10px; font-size: 11px; font-weight: 600; background: var(--moss-light); color: var(--moss); }
+  .build-inactive { padding: 3px 8px; border-radius: 10px; font-size: 11px; font-weight: 600; background: var(--cream-dark); color: var(--bark-light); }
+  .new-btn {
+    width: 100%; padding: 14px; border: 2px dashed var(--cream-dark); border-radius: var(--radius);
+    background: var(--cream); font-size: 14px; font-weight: 600; color: var(--bark-mid);
+    cursor: pointer; margin-bottom: 16px; transition: all 0.15s;
+  }
+  .new-btn:hover { border-color: var(--moss); color: var(--moss); background: var(--moss-pale); }
+
+  /* Utility */
+  .hide { display: none !important; }
+  .pill-urgent { background: var(--red-light); color: var(--red-alert); padding: 3px 9px; border-radius: 20px; font-size: 11px; font-weight: 600; }
+  .pill-moderate { background: var(--amber-pale); color: var(--amber); padding: 3px 9px; border-radius: 20px; font-size: 11px; font-weight: 600; }
+
+  @media (max-width: 480px) {
+    .phone { width: 100%; border-radius: 0; min-height: 100vh; }
+    .phone-shell { padding: 0; }
+  }
+</style>
+</head>
+<body>
+
+<!-- LANDING -->
+<div id="landing" class="landing screen active">
+  <div class="landing-logo">Seraya</div>
+  <div class="landing-sub">Front-end preview · Elderly + Caregiver</div>
+  <div class="landing-tagline">Tall as wisdom. Rooted in care.</div>
+  <div class="landing-btns">
+    <button class="btn-outline" onclick="showElderly()">Elderly app</button>
+    <button class="btn-primary" onclick="showCaregiver()">Caregiver app</button>
+  </div>
+  <div class="landing-note">Named for Borneo's tallest tropical tree — its great height held up by wide buttress roots, just as our elders' wisdom rests on the care that surrounds them.</div>
+</div>
+
+<!-- ELDERLY APP -->
+<div id="elderly-screen" class="screen">
+  <div class="phone-shell">
+    <div class="phone">
+      <div class="phone-status"><span>9:14</span><span>◼◼◼ ▶ 💾</span></div>
+      <div class="phone-content">
+        <div class="elderly-header">
+          <div class="elderly-logo">Seraya</div>
+          <div class="elderly-greeting">Good morning, Ahmad 🌿</div>
+        </div>
+        <div id="q-container"></div>
+        <div class="progress-bar-wrap" id="progress-wrap">
+          <div class="progress-label" id="progress-label">Question 1 of 5</div>
+          <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:20%"></div></div>
+        </div>
+        <div class="q-nav" id="q-nav">
+          <button class="q-nav-btn" id="prev-btn" onclick="prevQ()" style="visibility:hidden">← Back</button>
+          <button class="q-nav-btn next" id="next-btn" onclick="nextQ()">Next →</button>
+        </div>
+        <div style="padding:16px 20px 0;">
+          <button class="btn-outline" style="font-size:12px;padding:8px 16px;" onclick="showLanding()">← Back to menu</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CAREGIVER APP -->
+<div id="caregiver-screen" class="screen">
+  <div class="phone-shell">
+    <div class="phone">
+      <div class="phone-status"><span>9:14</span><span>◼◼◼ ▶ 💾</span></div>
+      <div class="phone-content" id="cg-content-area"></div>
+      <nav class="cg-nav">
+        <button class="cg-nav-item active" id="nav-dashboard" onclick="cgNav('dashboard')">
+          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="7" height="7" rx="1.5"/><rect x="11" y="2" width="7" height="7" rx="1.5"/><rect x="2" y="11" width="7" height="7" rx="1.5"/><rect x="11" y="11" width="7" height="7" rx="1.5"/></svg>
+          <span class="cg-nav-label">Dashboard</span>
+        </button>
+        <button class="cg-nav-item" id="nav-insights" onclick="cgNav('insights')">
+          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M10 2L12.4 7.5H18L13.5 11.1L15.3 17L10 13.6L4.7 17L6.5 11.1L2 7.5H7.6L10 2Z"/></svg>
+          <span class="cg-nav-label">Insights</span>
+        </button>
+        <button class="cg-nav-item" id="nav-notifs" onclick="cgNav('notifs')">
+          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M10 2a6 6 0 0 1 6 6v3l1.5 2.5H2.5L4 11V8a6 6 0 0 1 6-6zm0 0v-1m0 17a2 2 0 0 0 2-2H8a2 2 0 0 0 2 2z"/></svg>
+          <span class="cg-nav-label">Alerts</span>
+        </button>
+        <button class="cg-nav-item" id="nav-build" onclick="cgNav('build')">
+          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2l4 4-10 10H4v-4L14 2zm2 2l2 2"/></svg>
+          <span class="cg-nav-label">Build</span>
+        </button>
+      </nav>
+    </div>
+  </div>
+</div>
+
+<script>
+// ─── DATA ───
+const questions = [
+  { icon: '👂', text: 'How is your hearing today?', type: 'scale' },
+  { icon: '👁️', text: 'How is your vision today?', type: 'scale' },
+  { icon: '💊', text: 'Did you take your medication?', type: 'yn' },
+  { icon: '🦵', text: 'How is your movement and walking?', type: 'scale' },
+  { icon: '🧠', text: 'How sharp does your mind feel today?', type: 'scale' },
+];
+let qIndex = 0, qAnswers = {};
+
+const heatmapData = [
+  0,0,4,5,4,3,5, 4,5,5,4,3,2,4, 5,5,4,4,3,2,1, 3,4,5,5,4,4,3, 2,2
+];
+
+const patients = [
+  {
+    id:'siti', initials:'SA', avClass:'av-amber', name:'Siti Aminah', age:72,
+    meta:'Post-Surgery Recovery · 8 questions',
+    lastCheckin:'Today, 8:30 AM', status:'done',
+    alertText:'Hearing rated ≤2 for 3 consecutive days.',
+    scores: [{label:'Hearing',val:2,warn:true},{label:'Vision',val:4},{label:'Medication',val:5},{label:'Mobility',val:3}],
+    trending: {
+      hearing: [4,4,3,3,2,2,2],
+      vision: [4,5,4,4,5,4,4],
+      mobility: [3,4,3,3,2,3,3],
+      cognition: [4,4,4,5,4,4,4],
+      medication: [5,5,5,5,5,5,5]
+    },
+    heatmap: [0,0,5,4,4,3,5, 4,5,5,4,3,3,4, 5,5,4,3,3,2,2, 3,4,5,4,4,3,3, 2,2],
+    insights: [
+      {
+        type:'urgent', icon:'👂', title:'Persistent hearing decline — 3 consecutive days',
+        severity:'Urgent', days:'Triggered 3 days ago',
+        summary:'Siti\'s hearing score has dropped from 4 to 2 over the past week and has stayed at 2 for 3 consecutive days. This crosses the alert threshold you set. Prolonged hearing difficulty in post-surgical patients may indicate fluid buildup, medication side effects, or underlying nerve involvement.',
+        actions:[
+          {num:1,type:'warn', text:'Schedule an ENT review within 5–7 days to rule out post-surgical causes.'},
+          {num:2,type:'warn', text:'Review current medication list for ototoxic drugs (aminoglycosides, loop diuretics).'},
+          {num:3,type:'amber', text:'Ensure Siti sits closer to caregivers during daily conversations to compensate.'},
+          {num:4,type:'', text:'Document any complaints of tinnitus or dizziness alongside hearing scores.'},
+          {num:5,type:'', text:'Consider a follow-up audiogram if score remains ≤2 for another 3 days.'},
+        ],
+        resources:[
+          {icon:'🏥', name:'Hospital KL — Audiology Dept.', desc:'Hearing assessment & specialist referrals, Jalan Pahang KL', tag:'clinic'},
+          {icon:'🇲🇾', name:'MySihat — MOH Malaysia', desc:'Official hearing health guide & clinic finder', tag:'gov'},
+          {icon:'🤝', name:'Persatuan Orang Pekak Malaysia', desc:'Support network for hearing impaired & families', tag:'ngo'},
+          {icon:'💊', name:'Malaysian Pharmacists Society', desc:'Ototoxic drug awareness resources', tag:'ngo'},
+          {icon:'📞', name:'Talian Kesihatan 1800-888-828', desc:'MOH helpline for urgent health queries, Mon–Fri 8am–5pm', tag:'gov'},
+        ]
+      },
+      {
+        type:'moderate', icon:'🦵', title:'Mobility scores slightly below baseline',
+        severity:'Monitor', days:'Past 5 days',
+        summary:'Siti\'s mobility score has averaged 2.8 over the last 5 days, down from her 30-day baseline of 3.6. This may be expected in the post-surgical recovery period, but a sustained drop warrants physiotherapy review.',
+        actions:[
+          {num:1,type:'amber', text:'Consult physiotherapist on current exercise plan and pain levels.'},
+          {num:2,type:'', text:'Check for any new falls, bruising, or reported pain not captured in check-ins.'},
+          {num:3,type:'', text:'Review any recent changes in footwear or living environment.'},
+        ],
+        resources:[
+          {icon:'🏃', name:'Malaysian Physiotherapy Assoc.', desc:'Find certified physiotherapists near you', tag:'ngo'},
+          {icon:'🏠', name:'SOCSO Home Care Services', desc:'Government-supported home physiotherapy', tag:'gov'},
+          {icon:'🧰', name:'NIOSH Malaysia', desc:'Assistive device & home modification guidance', tag:'gov'},
+          {icon:'🤝', name:'Pertubuhan Warga Emas Malaysia', desc:'Elderly mobility support groups nationwide', tag:'ngo'},
+          {icon:'🏥', name:'Rehab Unit, Hospital Putrajaya', desc:'Post-surgical mobility rehabilitation programs', tag:'clinic'},
+        ]
+      }
+    ]
+  },
+  {
+    id:'ahmad', initials:'AI', avClass:'av-green', name:'Ahmad bin Ismail', age:68,
+    meta:'Daily General Check-in · 6 questions',
+    lastCheckin:'Today, 9:14 AM', status:'done',
+    alertText: null,
+    scores: [{label:'Hearing',val:4},{label:'Vision',val:4},{label:'Medication',val:5},{label:'Mobility',val:4}],
+    trending: {
+      hearing: [4,4,4,3,4,4,4],
+      vision: [3,4,4,4,4,4,4],
+      mobility: [4,3,4,4,5,4,4],
+      cognition: [4,4,5,4,4,4,5],
+      medication: [5,5,4,5,5,5,5]
+    },
+    heatmap: [0,0,4,4,5,4,4, 3,4,5,5,4,4,5, 4,5,5,4,4,4,5, 4,4,5,5,4,4,4, 4,4],
+    insights: [
+      {
+        type:'positive', icon:'✅', title:'Consistent check-in streak — 28 days',
+        severity:'Positive', days:'This month',
+        summary:'Ahmad has completed his daily check-in every day this month. All scores remain within healthy range. No alert thresholds triggered.',
+        actions:[
+          {num:1,type:'', text:'Continue current monitoring frequency — no changes needed.'},
+          {num:2,type:'', text:'Consider reducing check-in questions if Ahmad reports fatigue.'},
+        ],
+        resources:[]
+      }
+    ]
+  },
+  {
+    id:'lim', initials:'LA', avClass:'av-blue', name:'Lim Ah Kow', age:75,
+    meta:'Pain Management · 4 questions',
+    lastCheckin:'Yesterday, 4:00 PM', status:'missed',
+    alertText:'Missed check-in today.',
+    scores: [{label:'Hearing',val:3},{label:'Mobility',val:2,warn:true},{label:'Pain',val:2,warn:true}],
+    trending: {
+      hearing: [3,3,4,3,3,3,0],
+      vision: [3,4,3,3,4,3,0],
+      mobility: [3,2,3,2,2,2,0],
+      cognition: [4,3,4,3,4,3,0],
+      medication: [4,5,4,5,4,5,0]
+    },
+    heatmap: [0,0,3,4,4,3,3, 4,3,4,4,3,3,3, 4,4,3,3,3,2,3, 3,3,4,4,3,3,3, 3,0],
+    insights: [
+      {
+        type:'moderate', icon:'🦵', title:'Mobility consistently low — 5-day average of 2.2',
+        severity:'Monitor', days:'Past 5 days',
+        summary:'Lim\'s mobility score has averaged 2.2 over the past 5 days. Combined with a missed check-in today, this pattern may indicate increased difficulty with daily activities or low motivation to engage.',
+        actions:[
+          {num:1,type:'amber', text:'Call or visit Lim today to assess why check-in was missed.'},
+          {num:2,type:'amber', text:'Assess for fall risk — consider a home safety assessment.'},
+          {num:3,type:'', text:'Review pain management plan if mobility and pain scores track together.'},
+        ],
+        resources:[
+          {icon:'🏃', name:'Malaysian Physiotherapy Assoc.', desc:'Certified physiotherapists near you', tag:'ngo'},
+          {icon:'🏠', name:'SOCSO Home Care Services', desc:'Government-supported home physiotherapy', tag:'gov'},
+          {icon:'🧰', name:'NIOSH Malaysia', desc:'Assistive device & home modification guidance', tag:'gov'},
+          {icon:'🤝', name:'Persatuan Kebajikan Orang Tua', desc:'Local elderly welfare support', tag:'ngo'},
+          {icon:'🏥', name:'Hospital Rehabilitation Unit', desc:'Pain and mobility specialist referrals', tag:'clinic'},
+        ]
+      }
+    ]
+  }
+];
+
+// ─── NAVIGATION ───
+let currentCgView = 'dashboard';
+let selectedPatient = null;
+let selectedTab = 'trends';
+
+function showLanding() {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('landing').classList.add('active');
+}
+function showElderly() {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('elderly-screen').classList.add('active');
+  qIndex = 0; qAnswers = {};
+  renderQuestion();
+}
+function showCaregiver() {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('caregiver-screen').classList.add('active');
+  cgNav('dashboard');
+}
+function cgNav(tab) {
+  currentCgView = tab; selectedPatient = null;
+  document.querySelectorAll('.cg-nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('nav-' + tab).classList.add('active');
+  renderCgView();
+}
+
+// ─── ELDERLY FLOW ───
+function renderQuestion() {
+  const container = document.getElementById('q-container');
+  if (qIndex >= questions.length) {
+    container.innerHTML = `<div class="complete-card">
+      <div class="complete-icon">🌿</div>
+      <div class="complete-title">All done for today!</div>
+      <div class="complete-sub">Your answers have been saved. Your caregiver will be notified. Take care!</div>
+      <button class="btn-primary" style="margin-top:20px;font-size:13px;padding:10px 24px;" onclick="showElderly()">Try again</button>
+    </div>`;
+    document.getElementById('progress-wrap').style.display = 'none';
+    document.getElementById('q-nav').style.display = 'none';
+    return;
+  }
+  document.getElementById('progress-wrap').style.display = 'block';
+  document.getElementById('q-nav').style.display = 'flex';
+  const q = questions[qIndex];
+  const pct = ((qIndex+1)/questions.length*100).toFixed(0);
+  document.getElementById('progress-label').textContent = `Question ${qIndex+1} of ${questions.length}`;
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('prev-btn').style.visibility = qIndex > 0 ? 'visible' : 'hidden';
+  let inputHtml = '';
+  if (q.type === 'scale') {
+    const sel = qAnswers[qIndex] || null;
+    const emojis = ['😣','😟','😐','🙂','😄'];
+    const labels = ['Very bad','Bad','Okay','Good','Great'];
+    inputHtml = `<div class="smiley-row">${emojis.map((e,i) =>
+      `<button class="smiley-btn${sel===i+1?' selected':''}" onclick="selectAnswer(${i+1})">${e}</button>`
+    ).join('')}</div>
+    <div class="smiley-labels"><span>${labels[0]}</span><span>${labels[4]}</span></div>`;
+  } else {
+    const sel = qAnswers[qIndex];
+    inputHtml = `<div class="yn-row">
+      <button class="yn-btn yes${sel==='yes'?' selected':''}" onclick="selectAnswer('yes')">✓ Yes</button>
+      <button class="yn-btn no${sel==='no'?' selected':''}" onclick="selectAnswer('no')">✗ No</button>
+    </div>`;
+  }
+  container.innerHTML = `<div class="question-card">
+    <div class="q-icon">${q.icon}</div>
+    <div class="q-text">${q.text}</div>
+    ${inputHtml}
+  </div>`;
+}
+function selectAnswer(val) {
+  qAnswers[qIndex] = val;
+  renderQuestion();
+}
+function nextQ() { if (qAnswers[qIndex] !== undefined || true) { qIndex++; renderQuestion(); } }
+function prevQ() { if (qIndex > 0) { qIndex--; renderQuestion(); } }
+
+// ─── CAREGIVER VIEWS ───
+function renderCgView() {
+  const area = document.getElementById('cg-content-area');
+  if (selectedPatient !== null) { renderPatientDetail(area); return; }
+  if (currentCgView === 'dashboard') renderDashboard(area);
+  else if (currentCgView === 'insights') renderInsightsOverview(area);
+  else if (currentCgView === 'notifs') renderNotifs(area);
+  else if (currentCgView === 'build') renderBuild(area);
+}
+
+function renderDashboard(area) {
+  const alertCount = patients.filter(p => p.alertText).length;
+  area.innerHTML = `
+    <div class="cg-topbar">
+      <div><div class="cg-topbar-title">Dashboard</div><div class="cg-topbar-sub">Monday, 4 May 2026</div></div>
+      ${alertCount ? `<div class="notif-badge">${alertCount}</div>` : ''}
+    </div>
+    <div class="cg-content">
+      <div class="insights-banner" onclick="cgNav('insights')">
+        <div class="ib-top"><span class="ib-label">AI Insights Summary</span><span class="ib-badge">2 concerns</span></div>
+        <div class="ib-title">Siti's hearing has declined for 3 days. Lim missed today's check-in.</div>
+        <div class="ib-items">
+          <span class="ib-chip">👂 Hearing</span>
+          <span class="ib-chip">🦵 Mobility</span>
+          <span class="ib-chip">📋 Missed</span>
+        </div>
+      </div>
+      <div class="section-header">Your patients</div>
+      ${patients.map((p,i) => `
+        <div class="patient-card ${p.alertText ? 'alert-card' : ''}" onclick="openPatient(${i})">
+          <div class="patient-card-top">
+            <div class="avatar ${p.avClass}">${p.initials}</div>
+            <div>
+              <div class="patient-name">${p.name}</div>
+              <div class="patient-meta">${p.lastCheckin}</div>
+            </div>
+            <span class="status-pill ${p.status==='done'?'pill-done':p.status==='missed'?'pill-missed':'pill-pending'}">
+              ${p.status==='done'?'Done':p.status==='missed'?'Missed':'Pending'}
+            </span>
+          </div>
+          ${p.alertText ? `<div style="margin-top:10px;font-size:12px;color:var(--red-alert);display:flex;align-items:center;gap:6px;">⚠️ ${p.alertText}</div>` : ''}
+          <div class="patient-card-scores">
+            ${p.scores.map(s => `
+              <div class="score-chip${s.warn?' warn':''}">
+                <div class="score-dot ${s.warn?'dot-red':'dot-green'}"></div>
+                ${s.label}: ${s.val}/5
+              </div>`).join('')}
+          </div>
+        </div>`).join('')}
+      <div style="height:16px;"></div>
+    </div>`;
+}
+
+function openPatient(i) {
+  selectedPatient = i;
+  selectedTab = 'trends';
+  renderCgView();
+}
+
+function renderPatientDetail(area) {
+  const p = patients[selectedPatient];
+  area.innerHTML = `
+    <button class="back-btn" onclick="selectedPatient=null;renderCgView()">← Back</button>
+    <div class="patient-hero">
+      <div class="patient-hero-top">
+        <div class="avatar ${p.avClass}" style="width:48px;height:48px;font-size:16px;">${p.initials}</div>
+        <div>
+          <div class="patient-hero-name">${p.name}</div>
+          <div class="patient-hero-meta">Age ${p.age} · ${p.meta}</div>
+        </div>
+      </div>
+      ${p.alertText ? `<div class="alert-banner">⚠️ <span>${p.alertText}</span></div>` : ''}
+    </div>
+    <div class="tabs">
+      <div class="tab${selectedTab==='trends'?' active':''}" onclick="switchTab('trends')">Trends</div>
+      <div class="tab${selectedTab==='heatmap'?' active':''}" onclick="switchTab('heatmap')">Heatmap</div>
+      <div class="tab${selectedTab==='insights'?' active':''}" onclick="switchTab('insights')">Insights${p.insights.filter(i=>i.type!=='positive').length > 0 ? ' ●' : ''}</div>
+    </div>
+    <div id="tab-content"></div>`;
+  renderTab();
+}
+
+function switchTab(tab) {
+  selectedTab = tab;
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => { if(t.textContent.includes(tab.charAt(0).toUpperCase()+tab.slice(1))) t.classList.add('active'); });
+  renderTab();
+}
+
+function renderTab() {
+  const p = patients[selectedPatient];
+  const container = document.getElementById('tab-content');
+  if (selectedTab === 'trends') renderTrendsTab(p, container);
+  else if (selectedTab === 'heatmap') renderHeatmapTab(p, container);
+  else if (selectedTab === 'insights') renderInsightsTab(p, container);
+}
+
+function renderTrendsTab(p, container) {
+  const days = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+  const avg = arr => (arr.filter(v=>v>0).reduce((a,b)=>a+b,0)/arr.filter(v=>v>0).length).toFixed(1);
+  const trend = arr => { const v=arr.filter(v=>v>0); return v[v.length-1]-v[v.length-4]; };
+  const trendLabel = v => v > 0.3 ? `<span class="trend-up">↑ ${v.toFixed(1)}</span>` : v < -0.3 ? `<span class="trend-down">↓ ${Math.abs(v).toFixed(1)}</span>` : `<span class="trend-flat">→ stable</span>`;
+
+  container.innerHTML = `<div class="tab-panel active" style="padding-bottom:24px;">
+    <div class="stat-row">
+      <div class="stat-box">
+        <div class="stat-val${p.trending.hearing.slice(-1)[0]<=2?' warn':''}">
+          ${p.trending.hearing.slice(-1)[0]}/5</div>
+        <div class="stat-label">Hearing today</div>
+        <div class="stat-trend">${trendLabel(trend(p.trending.hearing))}</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-val${p.trending.mobility.slice(-1)[0]<=2?' warn':''}">
+          ${p.trending.mobility.slice(-1)[0]}/5</div>
+        <div class="stat-label">Mobility today</div>
+        <div class="stat-trend">${trendLabel(trend(p.trending.mobility))}</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-val ok">${avg(p.trending.medication)}</div>
+        <div class="stat-label">Meds avg</div>
+        <div class="stat-trend">${trendLabel(trend(p.trending.medication))}</div>
+      </div>
+    </div>
+
+    <div class="chart-section">
+      <div class="chart-section-title">7-day trend — all metrics</div>
+      <div class="chart-section-sub">Scale 1–5 · Last 7 days</div>
+      <canvas id="trend-chart" height="160"></canvas>
+      <div class="chart-legend">
+        <div class="legend-item"><div class="legend-dot" style="background:#C4782A"></div>Hearing</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#3D6B4F"></div>Vision</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#2D5986"></div>Mobility</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#8C7D68"></div>Cognition</div>
+      </div>
+    </div>
+
+    <div class="chart-section">
+      <div class="chart-section-title">Metric comparison — 7-day average</div>
+      <div class="comparison-bars">
+        ${[
+          {name:'Medication', val:avg(p.trending.medication), max:5},
+          {name:'Cognition',  val:avg(p.trending.cognition),  max:5},
+          {name:'Vision',     val:avg(p.trending.vision),     max:5},
+          {name:'Mobility',   val:avg(p.trending.mobility),   max:5},
+          {name:'Hearing',    val:avg(p.trending.hearing),    max:5},
+        ].map(m => {
+          const pct = (m.val/m.max*100).toFixed(0);
+          const col = m.val >= 4 ? '#3D6B4F' : m.val >= 3 ? '#C4782A' : '#C0392B';
+          return `<div class="comp-row">
+            <div class="comp-label-row"><span class="comp-name">${m.name}</span><span class="comp-val">${m.val}/5</span></div>
+            <div class="comp-bar-bg"><div class="comp-bar-fill" style="width:${pct}%;background:${col}"></div></div>
+          </div>`;
+        }).join('')}
+      </div>
+    </div>
+    <div style="height:8px;"></div>
+  </div>`;
+
+  // Draw trend chart
+  requestAnimationFrame(() => {
+    const canvas = document.getElementById('trend-chart');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const w = canvas.offsetWidth; const h = 160;
+    canvas.width = w * 2; canvas.height = h * 2;
+    ctx.scale(2, 2);
+    const pad = { top: 12, right: 16, bottom: 24, left: 24 };
+    const cw = w - pad.left - pad.right;
+    const ch = h - pad.top - pad.bottom;
+    const metrics = [
+      { data: p.trending.hearing,   color: '#C4782A' },
+      { data: p.trending.vision,    color: '#3D6B4F' },
+      { data: p.trending.mobility,  color: '#2D5986' },
+      { data: p.trending.cognition, color: '#8C7D68' },
+    ];
+    const days7 = ['M','T','W','T','F','S','S'];
+
+    // grid lines
+    ctx.strokeStyle = '#EDE9E1'; ctx.lineWidth = 0.5;
+    for (let v = 1; v <= 5; v++) {
+      const y = pad.top + ch - ((v-1)/4 * ch);
+      ctx.beginPath(); ctx.moveTo(pad.left, y); ctx.lineTo(pad.left+cw, y); ctx.stroke();
+    }
+    // y labels
+    ctx.fillStyle = '#8C7D68'; ctx.font = '9px DM Sans'; ctx.textAlign = 'right';
+    for (let v = 1; v <= 5; v++) {
+      const y = pad.top + ch - ((v-1)/4 * ch);
+      ctx.fillText(v, pad.left - 4, y + 3);
+    }
+    // x labels
+    ctx.textAlign = 'center';
+    days7.forEach((d,i) => {
+      const x = pad.left + (i/(6)) * cw;
+      ctx.fillText(d, x, h - 4);
+    });
+    // lines
+    metrics.forEach(m => {
+      ctx.strokeStyle = m.color; ctx.lineWidth = 2;
+      ctx.lineJoin = 'round'; ctx.lineCap = 'round';
+      ctx.beginPath();
+      m.data.forEach((v,i) => {
+        if (v === 0) return;
+        const x = pad.left + (i/6)*cw;
+        const y = pad.top + ch - ((v-1)/4*ch);
+        i === 0 ? ctx.moveTo(x,y) : ctx.lineTo(x,y);
+      });
+      ctx.stroke();
+      // dots
+      m.data.forEach((v,i) => {
+        if (v === 0) return;
+        const x = pad.left + (i/6)*cw;
+        const y = pad.top + ch - ((v-1)/4*ch);
+        ctx.beginPath(); ctx.arc(x,y,3,0,Math.PI*2);
+        ctx.fillStyle = m.color; ctx.fill();
+      });
+    });
+  });
+}
+
+function renderHeatmapTab(p, container) {
+  const dayNames = ['S','M','T','W','T','F','S'];
+  const getColor = v => ['hm-0','hm-1','hm-2','hm-3','hm-4','hm-5'][v] || 'hm-0';
+  let selectedDay = null;
+  const dayScores = [
+    null,null,
+    {hearing:4,vision:5,medication:5,mobility:4,cognition:5},
+    {hearing:5,vision:4,medication:5,mobility:4,cognition:4},
+    {hearing:4,vision:4,medication:4,mobility:3,cognition:4},
+    {hearing:3,vision:4,medication:5,mobility:3,cognition:4},
+    {hearing:5,vision:5,medication:5,mobility:4,cognition:5},
+    {hearing:4,vision:3,medication:5,mobility:4,cognition:4},
+    {hearing:5,vision:4,medication:5,mobility:4,cognition:5},
+    {hearing:5,vision:5,medication:5,mobility:5,cognition:5},
+    {hearing:4,vision:4,medication:5,mobility:4,cognition:4},
+    {hearing:3,vision:4,medication:4,mobility:3,cognition:4},
+    {hearing:3,vision:3,medication:5,mobility:3,cognition:3},
+    {hearing:4,vision:4,medication:5,mobility:4,cognition:4},
+    {hearing:5,vision:5,medication:5,mobility:4,cognition:5},
+    {hearing:5,vision:4,medication:5,mobility:5,cognition:5},
+    {hearing:4,vision:4,medication:5,mobility:4,cognition:4},
+    {hearing:3,vision:4,medication:5,mobility:3,cognition:4},
+    {hearing:3,vision:3,medication:4,mobility:3,cognition:3},
+    {hearing:2,vision:4,medication:5,mobility:2,cognition:4},
+    {hearing:2,vision:4,medication:5,mobility:2,cognition:3},
+    {hearing:3,vision:5,medication:5,mobility:3,cognition:4},
+    {hearing:4,vision:4,medication:5,mobility:4,cognition:5},
+    {hearing:5,vision:5,medication:5,mobility:4,cognition:4},
+    {hearing:4,vision:4,medication:5,mobility:4,cognition:5},
+    {hearing:4,vision:4,medication:5,mobility:4,cognition:4},
+    {hearing:3,vision:4,medication:5,mobility:3,cognition:4},
+    {hearing:3,vision:4,medication:5,mobility:3,cognition:4},
+    {hearing:2,vision:4,medication:5,mobility:3,cognition:4},
+    {hearing:2,vision:4,medication:5,mobility:3,cognition:4},
+  ];
+  const scoreBar = (val,max=5) => {
+    const dots = Array.from({length:max},(_,i) => {
+      const filled = i < val;
+      const low = val <= 2 && filled;
+      const med = val === 3 && filled;
+      return `<div class="score-dot-sm ${filled?(low?'sd-low':med?'sd-warn':'sd-filled'):'sd-empty'}"></div>`;
+    }).join('');
+    return `<div class="day-metric-score">${dots}</div>`;
+  };
+  function renderHM(selDay) {
+    const cells = p.heatmap.map((v,i) => {
+      const day = i + 1;
+      return `<div class="hm-cell ${getColor(v)}${selDay===day?' ring':''}" onclick="selectHMDay(${day})" title="Apr ${day}"></div>`;
+    }).join('');
+    let dayDetailHtml = '';
+    if (selDay && dayScores[selDay-1]) {
+      const s = dayScores[selDay-1];
+      dayDetailHtml = `<div class="day-detail">
+        <div class="day-detail-title">April ${selDay}, 2026</div>
+        ${[['👂','Hearing',s.hearing],['👁️','Vision',s.vision],['💊','Medication',s.medication],['🦵','Mobility',s.mobility],['🧠','Cognition',s.cognition]].map(([ic,nm,vl]) =>
+          `<div class="day-metric-row"><div class="day-metric-name">${ic} ${nm}</div>${scoreBar(vl)}</div>`
+        ).join('')}
+      </div>`;
+    }
+    return `
+      <div class="heatmap-grid">
+        ${dayNames.map(d=>`<div class="hm-header">${d}</div>`).join('')}
+        <div class="hm-cell hm-0" style="visibility:hidden"></div>
+        <div class="hm-cell hm-0" style="visibility:hidden"></div>
+        ${cells}
+      </div>
+      <div class="hm-legend">
+        <div class="hm-legend-swatch" style="background:var(--cream-dark)"></div>No data
+        <div class="hm-legend-swatch" style="background:#E07B5A;margin-left:8px;"></div>Low
+        <div class="hm-legend-swatch" style="background:#A8CDB8;margin-left:8px;"></div>Mid
+        <div class="hm-legend-swatch" style="background:#2D6B4A;margin-left:8px;"></div>High
+      </div>
+      ${selDay ? `<div style="font-size:11px;color:var(--bark-light);margin-top:8px;">Showing April ${selDay}</div>` : `<div style="font-size:11px;color:var(--bark-light);margin-top:8px;">Tap a day to see details</div>`}
+      ${dayDetailHtml}`;
+  }
+  container.innerHTML = `<div class="tab-panel active" style="padding-bottom:24px;">
+    <div class="chart-section">
+      <div class="chart-section-title">April 2026</div>
+      <div id="hm-inner">${renderHM(null)}</div>
+    </div>
+  </div>`;
+  window.selectHMDay = function(day) {
+    selectedDay = selectedDay === day ? null : day;
+    document.getElementById('hm-inner').innerHTML = renderHM(selectedDay);
+  };
+}
+
+function renderInsightsTab(p, container) {
+  container.innerHTML = `<div class="tab-panel active" style="padding-bottom:24px;">
+    ${p.insights.map((ins, idx) => `
+      <div class="insight-card ${ins.type}" id="icard-${idx}">
+        <div class="insight-header" onclick="toggleInsight(${idx})">
+          <div class="insight-icon">${ins.icon}</div>
+          <div style="flex:1">
+            <div class="insight-title">${ins.title}</div>
+            <div class="insight-meta">
+              <span class="pill-${ins.type==='urgent'?'urgent':ins.type==='moderate'?'moderate':''}" style="${ins.type==='positive'?'background:var(--moss-light);color:var(--moss);padding:2px 8px;border-radius:10px;font-size:10px;font-weight:600;':''}">${ins.severity}</span>
+              · ${ins.days}
+            </div>
+          </div>
+          <div class="insight-chevron" id="chev-${idx}">▼</div>
+        </div>
+        <div class="insight-body" id="ibody-${idx}">
+          <div class="insight-summary">${ins.summary}</div>
+          ${ins.actions.length ? `
+          <div class="insight-actions">
+            <div class="insight-actions-title">Suggested actions</div>
+            ${ins.actions.map(a => `<div class="action-item">
+              <div class="action-num ${a.type}">${a.num}</div>
+              <div>${a.text}</div>
+            </div>`).join('')}
+          </div>` : ''}
+          ${ins.resources.length ? `
+          <div class="resources-section">
+            <div class="resources-title">Malaysia resources</div>
+            ${ins.resources.map(r => `
+              <div class="resource-item">
+                <div class="resource-icon">${r.icon}</div>
+                <div style="flex:1">
+                  <div class="resource-name">${r.name}</div>
+                  <div class="resource-desc">${r.desc}</div>
+                </div>
+                <span class="resource-tag tag-${r.tag}">${r.tag==='gov'?'Gov':r.tag==='ngo'?'NGO':'Clinic'}</span>
+              </div>`).join('')}
+          </div>` : ''}
+        </div>
+      </div>`).join('')}
+    <div style="height:8px;"></div>
+  </div>`;
+}
+
+function toggleInsight(idx) {
+  const body = document.getElementById('ibody-'+idx);
+  const chev = document.getElementById('chev-'+idx);
+  body.classList.toggle('open');
+  chev.classList.toggle('open');
+}
+
+function renderInsightsOverview(area) {
+  const allInsights = patients.flatMap((p,pi) =>
+    p.insights.map(ins => ({ ...ins, patient: p, pi }))
+  );
+  const urgent = allInsights.filter(i => i.type === 'urgent');
+  const moderate = allInsights.filter(i => i.type === 'moderate');
+
+  area.innerHTML = `
+    <div class="cg-topbar">
+      <div><div class="cg-topbar-title">Insights</div><div class="cg-topbar-sub">Rule-based · Malaysia resources</div></div>
+    </div>
+    <div class="cg-content">
+      ${urgent.length ? `<div class="section-header">Urgent</div>
+      ${urgent.map(ins => insightSummaryCard(ins)).join('')}` : ''}
+      ${moderate.length ? `<div class="section-header">Monitor</div>
+      ${moderate.map(ins => insightSummaryCard(ins)).join('')}` : ''}
+      <div class="section-header">Positive</div>
+      ${allInsights.filter(i=>i.type==='positive').map(ins => insightSummaryCard(ins)).join('')}
+      <div style="height:16px;"></div>
+    </div>`;
+}
+
+function insightSummaryCard(ins) {
+  return `<div class="patient-card ${ins.type==='urgent'?'alert-card':''}" onclick="openPatientInsight(${ins.pi})">
+    <div class="patient-card-top">
+      <div class="avatar ${ins.patient.avClass}">${ins.patient.initials}</div>
+      <div style="flex:1">
+        <div class="patient-name">${ins.patient.name}</div>
+        <div class="patient-meta">${ins.title}</div>
+      </div>
+      <span class="${ins.type==='urgent'?'pill-urgent':ins.type==='moderate'?'pill-moderate':''}"
+        style="${ins.type==='positive'?'background:var(--moss-light);color:var(--moss);padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;':''}">${ins.severity}</span>
+    </div>
+    <div style="margin-top:8px;font-size:12px;color:var(--bark-mid);line-height:1.5;">${ins.summary.substring(0,100)}…</div>
+    ${ins.resources.length ? `<div style="margin-top:8px;font-size:11px;color:var(--bark-light);">📎 ${ins.resources.length} Malaysia resources</div>` : ''}
+  </div>`;
+}
+
+function openPatientInsight(pi) {
+  selectedPatient = pi;
+  selectedTab = 'insights';
+  renderCgView();
+}
+
+function renderNotifs(area) {
+  const items = [
+    { dot:'var(--moss)', title:'Ahmad completed check-in', sub:'All scores in healthy range', time:'9:14 AM' },
+    { dot:'var(--red-alert)', title:'Alert: Siti — Hearing concern', sub:'Hearing ≤2 for 3 consecutive days', time:'8:45 AM' },
+    { dot:'var(--moss)', title:'Lim completed check-in', sub:'Mobility score: 2/5', time:'Yesterday' },
+    { dot:'var(--amber)', title:'Alert: Ahmad — Mobility decline', sub:'Dropped from 4 to 3 this week', time:'Yesterday' },
+    { dot:'var(--moss)', title:'Siti completed check-in', sub:'Post-surgery check-in complete', time:'2 days ago' },
+  ];
+  area.innerHTML = `
+    <div class="cg-topbar">
+      <div><div class="cg-topbar-title">Alerts</div></div>
+      <span style="font-size:12px;color:var(--moss);cursor:pointer;font-weight:500;">Mark all read</span>
+    </div>
+    <div class="cg-content">
+      ${items.map(n => `<div class="notif-item">
+        <div class="notif-dot" style="background:${n.dot}"></div>
+        <div class="notif-content">
+          <div class="notif-title">${n.title}</div>
+          <div class="notif-sub">${n.sub}</div>
+        </div>
+        <div class="notif-time">${n.time}</div>
+      </div>`).join('')}
+    </div>`;
+}
+
+function renderBuild(area) {
+  const items = [
+    { initials:'AI', avClass:'av-green', name:'Ahmad bin Ismail', questionnaire:'Daily General Check-in', q:6, active:true },
+    { initials:'SA', avClass:'av-amber', name:'Siti Aminah', questionnaire:'Post-Surgery Recovery', q:8, active:true },
+    { initials:'LA', avClass:'av-blue', name:'Lim Ah Kow', questionnaire:'Pain Management', q:4, active:false },
+  ];
+  area.innerHTML = `
+    <div class="cg-topbar">
+      <div><div class="cg-topbar-title">Build</div></div>
+    </div>
+    <div class="cg-content">
+      <button class="new-btn">+ Create new questionnaire</button>
+      <div class="section-header">Active questionnaires</div>
+      ${items.map(it => `<div class="build-item">
+        <div class="avatar ${it.avClass}">${it.initials}</div>
+        <div class="build-item-info">
+          <div class="build-item-name">${it.name}</div>
+          <div class="build-item-sub">${it.questionnaire} · ${it.q} questions</div>
+        </div>
+        <span class="${it.active?'build-active':'build-inactive'}">${it.active?'Active':'Inactive'}</span>
+      </div>`).join('')}
+    </div>`;
+}
+</script>
+</body>
+</html>
